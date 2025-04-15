@@ -61,9 +61,10 @@
 			</form>
 			<div class="mt-2 text-center">
 				<p>
-					Make sure you get the post ID from <a href="gregtech.eu">gregtech.eu</a>. There is
-					probably a better solution, if you have any ideas you can
-					<a href="https://github.com/gragorther/votes">contribute</a>.
+					Make sure you get the post ID from <a class="text-blue-400" href="gregtech.eu"
+						>gregtech.eu</a
+					>. There is probably a better solution, if you have any ideas you can
+					<a class="text-blue-400" href="https://github.com/gragorther/votes">contribute</a>.
 				</p>
 			</div>
 		</div>
