@@ -1,9 +1,0 @@
-services:
-  backend:
-    build: .
-    ports:
-      - "8000:8000"
-    environment:
-      - LEMMY_USERNAME=${LEMMY_USERNAME}
-      - LEMMY_PASSWORD=${LEMMY_PASSWORD}
-      - LEMMY_INSTANCE=${LEMMY_INSTANCE}
