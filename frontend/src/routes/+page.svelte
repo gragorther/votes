@@ -59,7 +59,7 @@
 		<div class="mt-2 text-center">
 			<p>
 				Make sure you get the post ID from <a href="gregtech.eu">gregtech.eu</a>. There is probably
-				a better solution, if you get any ideas you can
+				a better solution, if you have any ideas you can
 				<a href="https://github.com/gragorther/votes">contribute</a>.
 			</p>
 		</div>
