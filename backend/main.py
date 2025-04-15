@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
@@ -19,9 +19,10 @@ app.add_middleware(
     allow_headers=["*"],    # Allows all headers
 )
 
-username = os.environ['LEMMY_USERNAME']
-password = os.environ['LEMMY_PASSWORD']
-instance = os.environ['LEMMY_INSTANCE']
+username = os.getenv("LEMMY_USERNAME")
+password = os.getenv("LEMMY_PASSWORD")
+instance = os.getenv("LEMMY_INSTANCE")
+
 # Login to Lemmy
 login_url = f"{instance}/api/v3/user/login"
 login_data = {"username_or_email": username, "password": password}
