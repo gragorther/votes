@@ -12,7 +12,7 @@
 	async function fetchVotes() {
 		console.log('Submitting post ID:', postId);
 		try {
-			const response = await fetch('http://api.gregtech.eu/api/votes', {
+			const response = await fetch('https://api.gregtech.eu/api/votes', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ post_id: postId })
