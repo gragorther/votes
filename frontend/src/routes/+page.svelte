@@ -62,10 +62,10 @@
 {/if}
 
 {#if votes.length}
-	<div class="m-2 flex justify-center">
+	<div class="m-2 flex justify-center break-all">
 		<ul class="mt-4 space-y-2">
 			{#each votes as vote}
-				<li class="rounded border p-2">
+				<li class=" rounded border p-2">
 					{vote.user}@{vote.instance}: {vote.vote}
 				</li>
 			{/each}
