@@ -36,7 +36,7 @@
 
 <div class="text-center">
 	<h1 class="text-center text-4xl">Lemvotes</h1>
-	<p>A tool I made for getting information about who votes on which post</p>
+	<p>A tool I made for getting information about who votes on which Lemmy post</p>
 	<div class="flex items-center justify-center">
 		<div
 			class="max-w-xs content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
