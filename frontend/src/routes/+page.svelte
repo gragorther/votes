@@ -64,8 +64,8 @@
 {#if votes.length}
 	<div class="m-2 flex justify-center break-all">
 		<ul class="mt-4 space-y-2">
-			{#each votes as vote}
-				<li class=" rounded border p-2">
+			{#each [...votes].sort((a, b) => a.vote - b.vote) as vote}
+				<li class="rounded border p-2">
 					{vote.user}@{vote.instance}: {vote.vote}
 				</li>
 			{/each}
