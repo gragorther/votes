@@ -34,38 +34,41 @@
 	}
 </script>
 
-<div class="flex items-center justify-center">
-	<div
-		class="max-w-xs content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
-	>
-		<form
-			on:submit|preventDefault={fetchVotes}
-			class="mt-2 flex flex-col flex-wrap justify-center gap-2"
+<div class="text-center">
+	<h1 class="text-center text-4xl">Lemvotes</h1>
+	<p>A tool I made for getting information about who votes on which post</p>
+	<div class="flex items-center justify-center">
+		<div
+			class="max-w-xs content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
 		>
-			<input
-				type="number"
-				bind:value={postId}
-				placeholder="Enter Post ID"
-				class="self-center rounded-md border-2 border-orange-500 text-center"
-				required
-			/>
-			<button
-				type="submit"
-				class="cursor-pointer self-center rounded bg-blue-500 px-4 py-2 text-white"
+			<form
+				on:submit|preventDefault={fetchVotes}
+				class="mt-2 flex flex-col flex-wrap justify-center gap-2"
 			>
-				Get Votes
-			</button>
-		</form>
-		<div class="mt-2 text-center">
-			<p>
-				Make sure you get the post ID from <a href="gregtech.eu">gregtech.eu</a>. There is probably
-				a better solution, if you have any ideas you can
-				<a href="https://github.com/gragorther/votes">contribute</a>.
-			</p>
+				<input
+					type="number"
+					bind:value={postId}
+					placeholder="Enter Post ID"
+					class="self-center rounded-md border-2 border-orange-500 text-center"
+					required
+				/>
+				<button
+					type="submit"
+					class="cursor-pointer self-center rounded bg-blue-500 px-4 py-2 text-white"
+				>
+					Get Votes
+				</button>
+			</form>
+			<div class="mt-2 text-center">
+				<p>
+					Make sure you get the post ID from <a href="gregtech.eu">gregtech.eu</a>. There is
+					probably a better solution, if you have any ideas you can
+					<a href="https://github.com/gragorther/votes">contribute</a>.
+				</p>
+			</div>
 		</div>
 	</div>
 </div>
-
 {#if error}
 	<p class="mt-4 text-red-500">{error}</p>
 {/if}
