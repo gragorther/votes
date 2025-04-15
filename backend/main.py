@@ -10,11 +10,10 @@ load_dotenv()
 
 app = FastAPI()
 
-origins = ["http://localhost:5173", "http://192.168.68.106:5173"]  
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allows specified origins
+    allow_origins=["http://localhost:5173", "http://localhost:3000", "https://votes.gregtech.eu"],
     allow_credentials=True,
     allow_methods=["*"],    # Allows all HTTP methods
     allow_headers=["*"],    # Allows all headers

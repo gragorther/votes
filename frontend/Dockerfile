@@ -1,20 +1,16 @@
-# This dockerfile must be built with the monorepo root directory as cwd
-FROM node:lts-alpine
-
-#all files needed for the build
-COPY package.json .
-COPY package-lock.json .
-COPY tsconfig.json .
-COPY svelte.config.js .
-COPY vite.config.ts .
-
-#all folders needed for the build
+FROM node:lts-alpine AS builder
+WORKDIR /app
+COPY package*.json .
+RUN npm ci
 COPY . .
-
-RUN npm i
-
 RUN npm run build
+RUN npm prune --production
 
-EXPOSE 8080
-
-CMD ["node", "build/index.js"]
+FROM node:lts-alpine
+WORKDIR /app
+COPY --from=builder /app/build build/
+COPY --from=builder /app/node_modules node_modules/
+COPY package.json .
+EXPOSE 3000
+ENV NODE_ENV=production
+CMD [ "node", "build" ]
