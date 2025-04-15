@@ -3,10 +3,7 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import requests
-from dotenv import load_dotenv
 from urllib.parse import urlparse
-
-load_dotenv()
 
 app = FastAPI()
 
