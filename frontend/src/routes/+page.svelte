@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { ArrowBigUp } from 'lucide-svelte';
+	import { ArrowBigDown } from 'lucide-svelte';
 	interface Vote {
 		user: string;
 		vote: number;
@@ -54,6 +56,13 @@
 				Get Votes
 			</button>
 		</form>
+		<div class="mt-2 text-center">
+			<p>
+				Make sure you get the post ID from <a href="gregtech.eu">gregtech.eu</a>. There is probably
+				a better solution, if you get any ideas you can
+				<a href="https://github.com/gragorther/votes">contribute</a>.
+			</p>
+		</div>
 	</div>
 </div>
 
@@ -66,7 +75,12 @@
 		<ul class="mt-4 space-y-2">
 			{#each [...votes].sort((a, b) => a.vote - b.vote) as vote}
 				<li class="rounded border p-2">
-					{vote.user}@{vote.instance}: {vote.vote}
+					{vote.user}@{vote.instance}
+					{#if vote.vote === -1}
+						<ArrowBigDown color="#eb3434" />
+					{:else}
+						<ArrowBigUp color="#34a4e0" />
+					{/if}
 				</li>
 			{/each}
 		</ul>
