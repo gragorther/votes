@@ -10,6 +10,7 @@
 	let postId = '';
 	let votes: Vote[] = [];
 	let error = '';
+	let comment = false;
 
 	async function fetchVotes() {
 		console.log('Submitting post ID:', postId);
@@ -17,7 +18,7 @@
 			const response = await fetch('https://api.gregtech.eu/api/votes', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ post_id: postId })
+				body: JSON.stringify({ post_id: postId, comment: comment })
 			});
 
 			const data = await response.json();
@@ -51,7 +52,10 @@
 					placeholder="Enter Post ID"
 					class="self-center rounded-md border-2 border-orange-500 text-center"
 					required
-				/>
+				/><span>
+					<input type="checkbox" bind:checked={comment} id="post-or-comment" />
+					<label for="post-or-comment">This is a comment</label>
+				</span>
 				<button
 					type="submit"
 					class="cursor-pointer self-center rounded bg-blue-500 px-4 py-2 text-white"
@@ -71,7 +75,7 @@
 	</div>
 </div>
 {#if error}
-	<p class="mt-4 text-red-500">{error}</p>
+	<p class="mt-4 text-center text-red-500">{error}</p>
 {/if}
 
 {#if votes.length}

@@ -34,24 +34,27 @@ auth_token = login_response.json()["jwt"]
 async def get_votes(request: Request):
     data = await request.json()
     post_id = data.get("post_id")
+    comment = data.get("comment")
     if not post_id:
         return JSONResponse(content={"error": "Post ID is required"}, status_code=400)
-
+    if comment == True:
+        like_type = "comment"
+    else:
+        like_type = "post"
     votes = []
     page = 1
     per_page = 50 
-
     while True:
-        likes_url = f"{instance}/api/v3/post/like/list?post_id={post_id}&page={page}&limit={per_page}"
+        likes_url = f"{instance}/api/v3/{like_type}/like/list?{like_type}_id={post_id}&page={page}&limit={per_page}"
         headers = {"Authorization": f"Bearer {auth_token}"}
         likes_response = requests.get(likes_url, headers=headers)
 
         if likes_response.status_code != 200:
-            print(f"Failed to retrieve post likes: {likes_response.text}")
+            print(f"Failed to retrieve {like_type} likes: {likes_response.text}")
             return JSONResponse(content={"error": "Failed to retrieve post likes"}, status_code=likes_response.status_code)
 
         likes_data = likes_response.json()
-        post_likes = likes_data.get("post_likes", [])
+        post_likes = likes_data.get(f"{like_type}_likes", [])
 
         if not post_likes:
             break
