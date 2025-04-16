@@ -39,8 +39,9 @@
 	<!--started work on adding icon-->
 	<!-- <span>
 		<img src="/favicon.png" alt="Lemvotes icon" class="size-5" />
-		<h1 class="text-center text-4xl">Lemvotes</h1>
 	</span> -->
+	<h1 class="text-center text-4xl">Lemvotes</h1>
+
 	<p>A tool I made for getting information about who votes on which Lemmy post</p>
 	<div class="flex items-center justify-center">
 		<div
