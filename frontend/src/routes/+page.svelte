@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { ArrowBigUp } from 'lucide-svelte';
 	import { ArrowBigDown } from 'lucide-svelte';
+	import { env } from '$env/dynamic/public';
 	interface Vote {
 		user: string;
 		vote: number;
 		instance: string;
 	}
+
+	const backend_url = env.PUBLIC_BACKEND_URL;
 
 	let postId = '';
 	let votes: Vote[] = [];
@@ -15,7 +18,7 @@
 	async function fetchVotes() {
 		console.log('Submitting post ID:', postId);
 		try {
-			const response = await fetch('https://api.gregtech.eu/api/votes', {
+			const response = await fetch(`${backend_url}/api/votes`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ post_id: postId, comment: comment })
@@ -36,10 +39,6 @@
 </script>
 
 <div class="text-center">
-	<!--started work on adding icon-->
-	<!-- <span>
-		<img src="/favicon.png" alt="Lemvotes icon" class="size-5" />
-	</span> -->
 	<h1 class="text-center text-4xl">Lemvotes</h1>
 
 	<p>A tool I made for getting information about who votes on which Lemmy post</p>

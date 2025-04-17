@@ -7,18 +7,20 @@ from urllib.parse import urlparse
 
 app = FastAPI()
 
+origin = os.environ['FRONTEND_URL']
+username = os.environ['LEMMY_USERNAME']
+password = os.environ['LEMMY_PASSWORD']
+instance = os.environ['LEMMY_INSTANCE']
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000", "https://votes.gregtech.eu"],
+    allow_origins=origin,
     allow_credentials=True,
     allow_methods=["*"],    # Allows all HTTP methods
     allow_headers=["*"],    # Allows all headers
 )
 
-username = os.environ['LEMMY_USERNAME']
-password = os.environ['LEMMY_PASSWORD']
-instance = os.environ['LEMMY_INSTANCE']
+
 # Login to Lemmy
 login_url = f"{instance}/api/v3/user/login"
 login_data = {"username_or_email": username, "password": password}
