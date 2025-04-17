@@ -9,6 +9,7 @@
 	}
 
 	const backend_url = env.PUBLIC_BACKEND_URL;
+	const instance_url = env.PUBLIC_INSTANCE_URL;
 
 	let postId = '';
 	let votes: Vote[] = [];
@@ -69,8 +70,8 @@
 			</form>
 			<div class="mt-2 text-center">
 				<p>
-					Make sure you get the post ID from <a class="text-blue-400" href="https://gregtech.eu"
-						>gregtech.eu</a
+					Make sure you get the post ID from <a class="text-blue-400" href="https://{instance_url}"
+						>{instance_url}</a
 					>. There is probably a better solution, if you have any ideas you can
 					<a class="text-blue-400" href="https://github.com/gragorther/votes">contribute</a>.
 				</p>
