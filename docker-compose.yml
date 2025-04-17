@@ -1,3 +1,5 @@
+# Use a reverse proxy in production, this is just for development
+
 services:
   frontend:
     build:
