@@ -1,4 +1,4 @@
-name: Frontend Docker Image CI
+name: Backend Docker Image CI
 
 on:
   push:
@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build ./frontend --file ./frontend/Dockerfile --tag lemvotes-frontend:$(date +%s)
+      run: docker build ./backend --file ./backend/Dockerfile --tag lemvotes-backend:$(date +%s)
