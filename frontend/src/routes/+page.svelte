@@ -40,7 +40,11 @@
 </script>
 
 <div class="text-center">
-	<h1 class="text-center text-4xl">Lemvotes</h1>
+	<span class=" flex justify-center"
+		><img class="display:inline inline size-10" src="/favicon.png" alt=" description" />
+
+		<h1 class="text-center text-4xl">Lemvotes</h1></span
+	>
 
 	<p>A tool I made for getting information about who votes on which Lemmy post</p>
 	<div class="flex items-center justify-center">
