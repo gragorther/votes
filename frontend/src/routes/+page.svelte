@@ -39,6 +39,8 @@
 	}
 </script>
 
+<title>Lemvotes</title>
+
 <div class="text-center">
 	<span class=" flex justify-center"
 		><img class="display:inline inline size-10" src="/favicon.png" alt=" description" />
