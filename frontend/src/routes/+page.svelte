@@ -74,10 +74,14 @@
 			</form>
 			<div class="mt-2 text-center">
 				<p>
-					Make sure you get the post ID from <a class="text-blue-400" href="https://{instance_url}"
-						>{instance_url}</a
+					Make sure you get the post ID from <a
+						class="text-blue-600"
+						href="https://{instance_url}"
+						target="_blank">{instance_url}</a
 					>. There is probably a better solution, if you have any ideas you can
-					<a class="text-blue-400" href="https://github.com/gragorther/votes">contribute</a>.
+					<a target="_blank" class="text-blue-600" href="https://github.com/gragorther/votes"
+						>contribute</a
+					>.
 				</p>
 			</div>
 		</div>
@@ -92,7 +96,9 @@
 		<ul class="mt-4 space-y-2">
 			{#each [...votes].sort((a, b) => a.vote - b.vote) as vote}
 				<li class="rounded border p-2">
-					{vote.user}@{vote.instance}
+					<a href="https://{vote.instance}/u/{vote.user}" class="text-blue-600"
+						>{vote.user}@{vote.instance}</a
+					>
 					{#if vote.vote === -1}
 						<ArrowBigDown color="#eb3434" />
 					{:else}
