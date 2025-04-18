@@ -1,10 +1,8 @@
-# This is the docker compose file I use on https://votes.gregtech.eu, you can adapt it to your needs. As you can see I went with Traefik.
+# make sure to change the URLs
 
 services:
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: ghcr.io/gragorther/votes-frontend:main
     depends_on:
       - backend
     labels:
@@ -27,9 +25,7 @@ services:
         
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: ghcr.io/gragorther/votes-backend:main
     labels:
       - traefik.enable=true
       - traefik.http.routers.http-votes-api.entryPoints=http
