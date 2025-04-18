@@ -58,7 +58,7 @@ async def get_votes(request: Request):
         likes_data = likes_response.json()
         post_likes = likes_data.get(f"{like_type}_likes", [])
 
-        if not post_likes:
+        if not post_likes: #ends the loop
             break
 
         for vote in post_likes:
