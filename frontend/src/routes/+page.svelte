@@ -19,6 +19,7 @@
 	async function fetchVotes() {
 		console.log('Submitting post ID:', postId);
 		try {
+			//sends request
 			const response = await fetch(`${backend_url}/api/votes`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
