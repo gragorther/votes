@@ -4,7 +4,10 @@ name: Create and publish a Docker image for the backend
 # Configures this workflow to run every time a change is pushed to the branch called `release`.
 on:
   push:
-    branches: ['main']
+    branches:
+      - 'main'
+    paths:
+      - 'backend/**'
 
 
 
