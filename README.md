@@ -1,6 +1,6 @@
 # votes
 
-This is an app to get information about who voted on a Lemmy post. It gets the information from an admin account on an instance. You can use the following docker compose file to run it:
+This is an app to get information about who voted on a Lemmy post. It gets the information from an admin account on an instance. You can use the following docker compose file to host it with Traefik on Traefik's external network named `traefik_access`:
 
 ```yaml
 # make sure to change the URLs
