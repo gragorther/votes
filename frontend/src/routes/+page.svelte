@@ -94,7 +94,7 @@
 	<p class="mt-4 text-center text-red-500">{error}</p>
 {/if}
 
-{#if votes.length}
+{#if !error}
 	<div class="m-2 flex justify-center break-all">
 		<ul class="mt-4 space-y-2">
 			{#each [...votes].sort((a, b) => a.vote - b.vote) as vote}
