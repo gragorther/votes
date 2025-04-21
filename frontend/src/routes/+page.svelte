@@ -61,7 +61,7 @@
 				<input
 					type="text"
 					bind:value={postId}
-					placeholder="Enter Post ID"
+					placeholder="Enter Post URL"
 					class="self-center rounded-md border-2 border-orange-500 text-center"
 					required
 				/><span>
