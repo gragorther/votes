@@ -47,10 +47,10 @@ app.add_middleware(
 @app.post("/api/votes")
 async def get_votes(request: Request):
     data = await request.json()
-    post_id = data.get("post_id")
+    post_url = data.get("post_url")
     comment = data.get("comment")
 
-    if not post_id:
+    if not post_url:
         return JSONResponse(content={"error": "Post ID is required"}, status_code=400)
 
     if comment == True:
@@ -58,15 +58,22 @@ async def get_votes(request: Request):
     else:
         like_type = "post"
 
+    resolve_url = f"{instance}/api/v3/resolve_object"
+    async with app.state.http.get(resolve_url, params={"q": post_url}) as resolve_response:
+        resolve_response.raise_for_status()
+        data = await resolve_response.json()
+        if comment == True:
+            post_id = data["comment"]["comment"]["id"]
+        else:
+            post_id = data["post"]["post"]["id"]
+
     votes = []
     page = 1
     per_page = 50
 
     while True:
-        likes_url = (
-            f"{instance}/api/v3/{like_type}/like/list"
-            f"?{like_type}_id={post_id}&page={page}&limit={per_page}"
-        )
+        likes_url = f"{instance}/api/v3/{like_type}/like/list?{like_type}_id={post_id}&page={page}&limit={per_page}"
+
         headers = {"Authorization": f"Bearer {app.state.auth_token}"}
 
         async with app.state.http.get(likes_url, headers=headers) as likes_response:
