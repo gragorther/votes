@@ -23,7 +23,7 @@
 			const response = await fetch(`${backend_url}/api/votes`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ post_id: postId, comment: comment })
+				body: JSON.stringify({ post_url: postId, comment: comment })
 			});
 
 			const data = await response.json();
@@ -59,7 +59,7 @@
 				class="mt-2 flex flex-col flex-wrap justify-center gap-2"
 			>
 				<input
-					type="number"
+					type="text"
 					bind:value={postId}
 					placeholder="Enter Post ID"
 					class="self-center rounded-md border-2 border-orange-500 text-center"
@@ -77,15 +77,9 @@
 			</form>
 			<div class="mt-2 text-center">
 				<p>
-					Make sure you get the post ID from <a
-						class="text-blue-600"
-						href="https://{instance_url}"
-						target="_blank">{instance_url}</a
-					>. There is probably a better solution, if you have any ideas you can
-					<a target="_blank" class="text-blue-600" href="https://github.com/gragorther/votes"
-						>contribute</a
-					>.
+Enter the post/comment URL in the field above.
 				</p>
+				<p>This tool is open source, you can access the code <a href="https://github.com/gragorther/votes" class="text-blue-500">on GitHub</a></p>
 			</div>
 		</div>
 	</div>
