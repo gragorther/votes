@@ -9,7 +9,7 @@
 	}
 
 	const backend_url = env.PUBLIC_BACKEND_URL;
-	const instance_url = env.PUBLIC_INSTANCE_URL;
+	const instance_url = env.PUBLIC_INSTANCE_DOMAIN;
 
 	let postId = '';
 	let votes: Vote[] = [];
