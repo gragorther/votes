@@ -31,7 +31,7 @@ services:
       - traefik.http.routers.https-votes.tls.certResolver=le-ssl
     environment:
       - PUBLIC_BACKEND_URL=https://api.gregtech.eu
-      - PUBLIC_INSTANCE_URL=gregtech.eu
+      - PUBLIC_INSTANCE_DOMAIN=gregtech.eu
 
         
 
@@ -60,5 +60,4 @@ networks:
   default:
     name: traefik_access
     external: true
-
 ```
