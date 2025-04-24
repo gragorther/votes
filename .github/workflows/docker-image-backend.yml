@@ -3,7 +3,6 @@ name: Build, Push & Release
 on:
   push:
     branches: [ main ]
-    tags:    [ 'v*.*.*' ]
     paths:   [ 'backend/**' ]
 
 env:
