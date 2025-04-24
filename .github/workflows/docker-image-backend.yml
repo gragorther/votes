@@ -3,39 +3,34 @@ name: Build, Push & Release
 on:
   push:
     branches: [ main ]
-    tags:    [ 'v*.*.*' ]
     paths:   [ 'backend/**' ]
 
 env:
   REGISTRY:   ghcr.io
-  IMAGE_NAME: you/your-backend
+  IMAGE_NAME: gragorther/votes-backend
 
 jobs:
   build-push-release:
     runs-on: ubuntu-latest
 
     permissions:
-      contents:     read
-      packages:     write
-      id-token:     write
+      contents:   read
+      packages:   write
+      id-token:   write
       attestations: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Log in to Container registry
-        uses: docker/login-action@v3
+      - name: Log in to registry
+        uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
 
       - name: Extract metadata (tags, labels)
         id: meta
@@ -43,13 +38,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            # 1) Semver from your Git tag, e.g. v1.2.3
             type=semver,pattern={{version}}
-            # 2) Always emit "stable" on every run
-            type=raw,value=stable
+            type=raw,value=stable,enable={{ startsWith(github.ref,'refs/tags/') }}
 
       - name: Build & push Docker image
-        id: push
         uses: docker/build-push-action@v3
         with:
           context: ./backend
@@ -58,20 +50,13 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
 
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
-        with:
-          subject-name:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
-
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name:     ${{ steps.meta.outputs.version }}
-          release_name: ${{ steps.meta.outputs.version }}
+          tag_name:     ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }}
           draft:        false
           prerelease:   false
