@@ -78,7 +78,8 @@
 			<div class="mt-2 text-center">
 				<p class="mb-2">
 					Enter the post/comment URL in the field above, and be aware that currently the
-					post/comment URL has to be from its origin instance. I am working on a better option.
+					post/comment URL has to be from its origin instance (the commenter/poster's instance). I
+					am working on a better option.
 				</p>
 				<p>
 					This tool is open source, you can access the code <a
