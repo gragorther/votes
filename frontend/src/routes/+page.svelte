@@ -76,10 +76,16 @@
 				</button>
 			</form>
 			<div class="mt-2 text-center">
-				<p>
-Enter the post/comment URL in the field above.
+				<p class="mb-2">
+					Enter the post/comment URL in the field above, and be aware that currently the
+					post/comment URL has to be from its origin instance. I am working on a better option.
 				</p>
-				<p>This tool is open source, you can access the code <a href="https://github.com/gragorther/votes" class="text-blue-500">on GitHub</a></p>
+				<p>
+					This tool is open source, you can access the code <a
+						href="https://github.com/gragorther/votes"
+						class="text-blue-500">on GitHub</a
+					>
+				</p>
 			</div>
 		</div>
 	</div>
