@@ -15,6 +15,7 @@
 	let votes: Vote[] = [];
 	let error = '';
 	let comment = false;
+	let post_type: string;
 
 	async function fetchVotes() {
 		console.log('Submitting post ID:', postId);
@@ -38,6 +39,14 @@
 			console.error('Fetch error:', err);
 		}
 	}
+
+	$: {
+		if (comment) {
+			post_type = 'Comment';
+		} else {
+			post_type = 'Post';
+		}
+	}
 </script>
 
 <title>Lemvotes</title>
@@ -49,7 +58,7 @@
 		<h1 class="text-center text-4xl">Lemvotes</h1></span
 	>
 
-	<p>A tool I made for getting information about who votes on which Lemmy post</p>
+	<p>A tool I made for getting information about who votes on which Lemmy post/comment</p>
 	<div class="flex items-center justify-center">
 		<div
 			class="max-w-xs content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
@@ -61,7 +70,7 @@
 				<input
 					type="text"
 					bind:value={postId}
-					placeholder="Enter Post URL"
+					placeholder="Enter {post_type} URL"
 					class="self-center rounded-md border-2 border-orange-500 text-center"
 					required
 				/><span>
@@ -76,15 +85,10 @@
 				</button>
 			</form>
 			<div class="mt-2 text-left">
-				<p class="mb-2">
-					Enter the post/comment URL in the field above, and be aware that currently the
-					post/comment URL has to be from its origin instance (the commenter/poster's instance). I
-					am working on a better option.
-				</p>
 				<p>
 					This tool is open source, you can access the code <a
 						href="https://github.com/gragorther/votes">on GitHub</a
-					>
+					>.
 				</p>
 			</div>
 		</div>
