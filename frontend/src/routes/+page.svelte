@@ -75,7 +75,7 @@
 					required
 				/><span>
 					<input type="checkbox" bind:checked={comment} id="post-or-comment" />
-					<label for="post-or-comment">This is a comment</label>
+					<label class="select-none" for="post-or-comment">This is a comment</label>
 				</span>
 				<button
 					type="submit"
