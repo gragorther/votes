@@ -57,9 +57,23 @@ async def get_votes(request: Request):
         like_type = "comment"
     else:
         like_type = "post"
+    parsed = urlparse(post_url)
+    post_instance = parsed.netloc
+    original_post_id = parsed.path.rsplit("/", 1)[-1]
 
-    resolve_url = f"{instance}/api/v3/resolve_object"
-    async with app.state.http.get(resolve_url, params={"q": post_url}) as resolve_response:
+    # get the original post URL from OP's instance (resolve_object can't resolve stuff retrieved via non-poster instances)
+    resolve1_url = f"https://{post_instance}/api/v3/{like_type}"
+    async with app.state.http.get(resolve1_url, params={"id": original_post_id}) as op_resolve_response:
+        op_resolve_response.raise_for_status()
+        op_data = await op_resolve_response.json()
+        if comment == True:
+            op_post_url = op_data["comment_view"]["comment"]["ap_id"]
+        else:
+            op_post_url = op_data["post_view"]["post"]["ap_id"]
+
+    # Resolve the federated object into a post ID
+    resolve2_url = f"{instance}/api/v3/resolve_object"
+    async with app.state.http.get(resolve2_url, params={"q": op_post_url}) as resolve_response:
         resolve_response.raise_for_status()
         data = await resolve_response.json()
         if comment == True:
