@@ -53,7 +53,11 @@
 
 <div class="text-center">
 	<span class=" flex justify-center"
-		><img class="display:inline inline size-10" src="/favicon.png" alt=" description" />
+		><img
+			class="display:inline inline size-10"
+			src="/favicon.png"
+			alt="website icon, a downvote and upvote arrow on the left and the lemmy logo on the right"
+		/>
 
 		<h1 class="text-center text-4xl">Lemvotes</h1></span
 	>
