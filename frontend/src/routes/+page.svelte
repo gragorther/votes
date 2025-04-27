@@ -116,7 +116,9 @@
 					<p>
 						This tool is open source, you can access the code <a
 							href="https://github.com/gragorther/votes">on GitHub</a
-						>.
+						>
+						and you read my posts about it on
+						<a href="https://blog.gregtech.eu/tags/lemvotes/">my blog</a>.
 					</p>
 				</div>
 			</div>
