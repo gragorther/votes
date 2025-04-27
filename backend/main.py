@@ -4,9 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import os
 import aiohttp
-from urllib.parse import urlparse
+from urllib.parse import urlparse  # this is one very useful library
 
-# Configuration variables (defined once at the top for simplicity)
+# Configuration variables
 origin = os.environ['FRONTEND_URL']
 username = os.environ['LEMMY_USERNAME']
 password = os.environ['LEMMY_PASSWORD']
@@ -84,7 +84,7 @@ async def get_votes(request: Request):
 
     votes = []
     page = 1
-    per_page = 50
+    per_page = 50  # Must be smaller than 50 due to Lemmy's limits
 
     while True:
         likes_url = f"{instance}/api/v3/{like_type}/like/list?{like_type}_id={post_id}&page={page}&limit={per_page}"
