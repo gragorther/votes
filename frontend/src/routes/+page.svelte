@@ -16,9 +16,13 @@
 	let error = '';
 	let comment = false;
 	let post_type: string;
+	let disabled = false;
+	let buttonColor = 'bg-blue-500';
+	let cursor = '';
+	let buttonCursor = 'cursor-pointer';
 
 	async function fetchVotes() {
-		console.log('Submitting post ID:', postId);
+		console.log('Submitting post URL:', postId);
 		try {
 			//sends request
 			const response = await fetch(`${backend_url}/api/votes`, {
@@ -40,6 +44,19 @@
 		}
 	}
 
+	async function handleSubmit() {
+		disabled = true;
+		buttonColor = 'bg-blue-300';
+		cursor = 'cursor-progress';
+		buttonCursor = 'cursor-progress';
+		await fetchVotes();
+
+		buttonColor = 'bg-blue-500';
+		buttonCursor = 'cursor-pointer';
+		disabled = false;
+		cursor = '';
+	}
+
 	$: {
 		if (comment) {
 			post_type = 'Comment';
@@ -51,7 +68,7 @@
 
 <title>Lemvotes</title>
 
-<div class="text-center">
+<div class="{cursor} text-center">
 	<span class=" flex justify-center"
 		><img
 			class="display:inline inline size-10"
@@ -68,14 +85,20 @@
 			class="max-w-xs content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
 		>
 			<form
-				on:submit|preventDefault={fetchVotes}
+				on:submit|preventDefault={handleSubmit}
 				class="mt-2 flex flex-col flex-wrap justify-center gap-2"
 			>
 				<input
 					type="text"
 					bind:value={postId}
 					placeholder="Enter {post_type} URL"
-					class="self-center rounded-md border-2 border-orange-500 text-center"
+					class="self-stretch rounded-md border-2 border-orange-500 text-center"
+					on:focus={(e) => {
+						const input = e.target as HTMLInputElement | null;
+						if (input) {
+							input.select();
+						}
+					}}
 					required
 				/><span>
 					<input type="checkbox" bind:checked={comment} id="post-or-comment" />
@@ -83,7 +106,8 @@
 				</span>
 				<button
 					type="submit"
-					class="cursor-pointer self-center rounded bg-blue-500 px-4 py-2 text-white"
+					class="{buttonCursor} self-center rounded {buttonColor} px-4 py-2 text-white"
+					{disabled}
 				>
 					Get Votes
 				</button>
