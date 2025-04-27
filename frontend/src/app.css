@@ -11,9 +11,12 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   appearance: textfield;
 }
+:root {
+  color-scheme: light dark;
+}
 @layer base{
   a {
-    color:blue
+    color: light-dark(blue, cyan)
   }
   a:hover{
     color:dodgerblue
