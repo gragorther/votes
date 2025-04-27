@@ -79,7 +79,7 @@
 			<h1 class="text-center text-4xl">Lemvotes</h1></span
 		>
 
-		<p>A tool I made for getting information about who votes on which Lemmy post/comment</p>
+		<p>A tool I made for getting information about who votes on a Lemmy post/comment</p>
 		<div class="flex items-center justify-center">
 			<div
 				class="max-w-xs content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
