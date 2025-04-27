@@ -49,6 +49,7 @@ async def get_votes(request: Request):
     data = await request.json()
     post_url = data.get("post_url")
     comment = data.get("comment")
+    print(f"Getting post: {post_url}")
 
     if not post_url:
         return JSONResponse(content={"error": "Post ID is required"}, status_code=400)
