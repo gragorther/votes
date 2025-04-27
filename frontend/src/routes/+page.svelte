@@ -79,7 +79,7 @@
 			<h1 class="text-center text-4xl">Lemvotes</h1></span
 		>
 
-		<p>A tool I made for getting information about who votes on a Lemmy post/comment</p>
+		<p>A tool for getting information about who votes on a Lemmy post/comment</p>
 		<div class="flex items-center justify-center">
 			<div
 				class="max-w-xs content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
@@ -117,8 +117,8 @@
 						This tool is open source, you can access the code <a
 							href="https://github.com/gragorther/votes">on GitHub</a
 						>
-						and you read my posts about it on
-						<a href="https://blog.gregtech.eu/tags/lemvotes/">my blog</a>.
+						and you can read the dev's posts on
+						<a href="https://blog.gregtech.eu/tags/lemvotes/">the blog</a>.
 					</p>
 				</div>
 			</div>
