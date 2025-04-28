@@ -9,7 +9,6 @@
 	}
 
 	const backend_url = env.PUBLIC_BACKEND_URL;
-	const instance_url = env.PUBLIC_INSTANCE_DOMAIN;
 
 	let postId = '';
 	let votes: Vote[] = [];
@@ -133,9 +132,7 @@
 			<ul class="mt-4 space-y-2">
 				{#each [...votes].sort((a, b) => a.vote - b.vote) as vote}
 					<li class="rounded border p-2">
-						<a href="https://{vote.instance}/u/{vote.user}" class="text-blue-600"
-							>{vote.user}@{vote.instance}</a
-						>
+						<a href="https://{vote.instance}/u/{vote.user}">{vote.user}@{vote.instance}</a>
 						{#if vote.vote === -1}
 							<ArrowBigDown color="#eb3434" />
 						{:else}
