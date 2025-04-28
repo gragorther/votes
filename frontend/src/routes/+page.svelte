@@ -131,13 +131,15 @@
 		<div class="m-2 flex justify-center break-all">
 			<ul class="mt-4 space-y-2">
 				{#each [...votes].sort((a, b) => a.vote - b.vote) as vote}
-					<li class="rounded border p-2">
+					<li class="rounded border p-2 text-center">
 						<a href="https://{vote.instance}/u/{vote.user}">{vote.user}@{vote.instance}</a>
-						{#if vote.vote === -1}
-							<ArrowBigDown color="#eb3434" />
-						{:else}
-							<ArrowBigUp color="#34a4e0" />
-						{/if}
+						<span class="inline">
+							{#if vote.vote === -1}
+								<ArrowBigDown class="inline" color="#eb3434" />
+							{:else}
+								<ArrowBigUp class="inline" color="#34a4e0" />
+							{/if}
+						</span>
 					</li>
 				{/each}
 			</ul>
