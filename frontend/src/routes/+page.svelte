@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ArrowBigUp } from 'lucide-svelte';
+	import { ArrowBigUp, Loader } from 'lucide-svelte';
 	import { ArrowBigDown } from 'lucide-svelte';
 	import { env } from '$env/dynamic/public';
 	interface Vote {
@@ -109,6 +109,10 @@
 						{disabled}
 					>
 						Get Votes
+						{#if disabled}
+							<!--I used the disabled variable here to avoid making another one named `loading` which would do exactly the same-->
+							<Loader class="inline size-4 animate-spin" />
+						{/if}
 					</button>
 				</form>
 				<div class="mt-2 text-left">
