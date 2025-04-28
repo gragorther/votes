@@ -10,15 +10,15 @@
 
 	const backend_url = env.PUBLIC_BACKEND_URL;
 
-	let postId = '';
-	let votes: Vote[] = [];
-	let error = '';
-	let comment = false;
-	let post_type: string;
-	let disabled = false;
-	let buttonColor = 'bg-blue-500';
-	let cursor = '';
-	let buttonCursor = 'cursor-pointer';
+	let postId = $state('');
+	let votes: Vote[] = $state([]);
+	let error = $state('');
+	let comment = $state(false);
+	let post_type: string = $state('');
+	let disabled = $state(false);
+	let buttonColor = $state('bg-blue-500');
+	let cursor = $state('');
+	let buttonCursor = $state('cursor-pointer');
 
 	async function fetchVotes() {
 		console.log('Submitting post URL:', postId);
@@ -43,7 +43,8 @@
 		}
 	}
 
-	async function handleSubmit() {
+	async function handleSubmit(event: any) {
+		event.preventDefault();
 		disabled = true;
 		buttonColor = 'bg-blue-300';
 		cursor = 'cursor-progress';
@@ -56,13 +57,13 @@
 		cursor = '';
 	}
 
-	$: {
+	$effect(() => {
 		if (comment) {
 			post_type = 'Comment';
 		} else {
 			post_type = 'Post';
 		}
-	}
+	});
 </script>
 
 <title>Lemvotes</title>
@@ -83,16 +84,13 @@
 			<div
 				class="max-w-xs content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
 			>
-				<form
-					on:submit|preventDefault={handleSubmit}
-					class="mt-2 flex flex-col flex-wrap justify-center gap-2"
-				>
+				<form onsubmit={handleSubmit} class="mt-2 flex flex-col flex-wrap justify-center gap-2">
 					<input
 						type="text"
 						bind:value={postId}
 						placeholder="Enter {post_type} URL"
 						class="self-stretch rounded-md border-2 border-orange-500 text-center"
-						on:focus={(e) => {
+						onfocus={(e) => {
 							const input = e.target as HTMLInputElement | null;
 							if (input) {
 								input.select();
@@ -135,7 +133,7 @@
 		<div class="m-2 flex justify-center break-all">
 			<ul class="mt-4 space-y-2">
 				{#each [...votes].sort((a, b) => a.vote - b.vote) as vote}
-					<li class="rounded border p-2 text-center">
+					<li class="rounded border p-1 text-center">
 						<a href="https://{vote.instance}/u/{vote.user}">{vote.user}@{vote.instance}</a>
 
 						{#if vote.vote === -1}
