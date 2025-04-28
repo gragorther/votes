@@ -133,13 +133,12 @@
 				{#each [...votes].sort((a, b) => a.vote - b.vote) as vote}
 					<li class="rounded border p-2 text-center">
 						<a href="https://{vote.instance}/u/{vote.user}">{vote.user}@{vote.instance}</a>
-						<span class="inline">
-							{#if vote.vote === -1}
-								<ArrowBigDown class="inline" color="#eb3434" />
-							{:else}
-								<ArrowBigUp class="inline" color="#34a4e0" />
-							{/if}
-						</span>
+
+						{#if vote.vote === -1}
+							<ArrowBigDown class="inline" color="#eb3434" />
+						{:else}
+							<ArrowBigUp class="inline" color="#34a4e0" />
+						{/if}
 					</li>
 				{/each}
 			</ul>
