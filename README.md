@@ -6,7 +6,24 @@ The backend is written in Python and the frontend in SvelteKit.
 
 ## Development
 
-First, you'll need uv, follow the [official instructions](https://docs.astral.sh/uv/getting-started/installation/) to install it.
+Set the following environment variables on your OS (you may change them to accomodate your setup):
+
+- PUBLIC_BACKEND_URL=<http://localhost:8000>
+- PUBLIC_INSTANCE_URL=yourinstance.tld
+- LEMMY_USERNAME=yourlemmyadminusername
+- LEMMY_PASSWORD=yourlemmyadminpassword
+- LEMMY_INSTANCE=<https://yourinstance.tld>
+- FRONTEND_URL=<http://localhost:5173>
+
+### Backend
+
+cd into the backend directory. First, you'll need uv, follow the [official instructions](https://docs.astral.sh/uv/getting-started/installation/) to install it. Then run `uv python install` to install python if you don't have it installed already via some external package manager. Then simply run `uv sync` to install the dependencies and run `uv run fastapi dev` to start the FastAPI dev server.
+
+To build a Docker image for testing or anything similar run `docker build -t backend-dev .` in the backend directory. Then you can run `docker run -p 8000:8000 backend-dev` to start the container.
+
+### Frontend
+
+[Install Node](https://nodejs.org/en/download),cd into the frontend directory, run `npm install` to install dependencies, then run `npm run dev` to start the dev server.
 
 ## Self-hosting
 
