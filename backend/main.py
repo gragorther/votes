@@ -7,10 +7,10 @@ import aiohttp
 from urllib.parse import urlparse  # this is one very useful library
 
 # Configuration variables
-origin = os.environ['FRONTEND_URL']
-username = os.environ['LEMMY_USERNAME']
-password = os.environ['LEMMY_PASSWORD']
-instance = os.environ['LEMMY_INSTANCE']
+origin = os.environ["FRONTEND_URL"]
+username = os.environ["LEMMY_USERNAME"]
+password = os.environ["LEMMY_PASSWORD"]
+instance = os.environ["LEMMY_INSTANCE"]
 
 
 @asynccontextmanager
@@ -31,6 +31,7 @@ async def lifespan(app: FastAPI):
     # After `yield`: shutdown
     await app.state.http.close()
 
+
 # Initialize FastAPI with the lifespan context
 app = FastAPI(lifespan=lifespan)
 
@@ -39,8 +40,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origin,
     allow_credentials=True,
-    allow_methods=["*"],    # Allows all HTTP methods
-    allow_headers=["*"],    # Allows all headers
+    allow_methods=["*"],  # Allows all HTTP methods
+    allow_headers=["*"],  # Allows all headers
 )
 
 
@@ -54,7 +55,7 @@ async def get_votes(request: Request):
     if not post_url:
         return JSONResponse(content={"error": "Post ID is required"}, status_code=400)
 
-    if comment == True:
+    if comment is True:
         like_type = "comment"
     else:
         like_type = "post"
@@ -64,20 +65,24 @@ async def get_votes(request: Request):
 
     # get the original post URL from OP's instance (resolve_object can't resolve stuff retrieved via non-poster instances)
     resolve1_url = f"https://{post_instance}/api/v3/{like_type}"
-    async with app.state.http.get(resolve1_url, params={"id": original_post_id}) as op_resolve_response:
+    async with app.state.http.get(
+        resolve1_url, params={"id": original_post_id}
+    ) as op_resolve_response:
         op_resolve_response.raise_for_status()
         op_data = await op_resolve_response.json()
-        if comment == True:
+        if comment is True:
             op_post_url = op_data["comment_view"]["comment"]["ap_id"]
         else:
             op_post_url = op_data["post_view"]["post"]["ap_id"]
 
     # Resolve the federated object into a post ID
     resolve2_url = f"{instance}/api/v3/resolve_object"
-    async with app.state.http.get(resolve2_url, params={"q": op_post_url}) as resolve_response:
+    async with app.state.http.get(
+        resolve2_url, params={"q": op_post_url}
+    ) as resolve_response:
         resolve_response.raise_for_status()
         data = await resolve_response.json()
-        if comment == True:
+        if comment is True:
             post_id = data["comment"]["comment"]["id"]
         else:
             post_id = data["post"]["post"]["id"]
@@ -94,7 +99,10 @@ async def get_votes(request: Request):
         async with app.state.http.get(likes_url, headers=headers) as likes_response:
             if likes_response.status != 200:
                 text = await likes_response.text()
-                return JSONResponse(content={"error": f"Failed to retrieve {like_type} likes: {text}"}, status_code=likes_response.status)
+                return JSONResponse(
+                    content={"error": f"Failed to retrieve {like_type} likes: {text}"},
+                    status_code=likes_response.status,
+                )
 
             likes_data = await likes_response.json()
 
@@ -112,11 +120,7 @@ async def get_votes(request: Request):
             parsed_url = urlparse(actor_id)
             instance_domain = parsed_url.netloc
 
-            votes.append({
-                "user":     user,
-                "instance": instance_domain,
-                "vote":     score
-            })
+            votes.append({"user": user, "instance": instance_domain, "vote": score})
 
         page += 1
 
