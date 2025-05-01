@@ -4,6 +4,10 @@ This is an app to get information about who voted on a Lemmy post. It gets the i
 
 The backend is written in Python and the frontend in SvelteKit.
 
+## Development
+
+First, you'll need uv, follow the [official instructions](https://docs.astral.sh/uv/getting-started/installation/) to install it.
+
 ## Self-hosting
 
 We'll need Docker and Docker Compose, you can follow Docker's [official guide](https://docs.docker.com/engine/install/) for your preferred platform (I only have support for Linux AMD64 and ARM64 in my Docker images because adding more would be yet another platform GitHub Actions has to build for). If you'd like to run this on any other platform you can build the docker image yourself by cloning this repo and using the following compose file:
