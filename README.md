@@ -21,6 +21,8 @@ cd into the backend directory. First, you'll need uv, follow the [official instr
 
 To build a Docker image for testing or anything similar run `docker build -t backend-dev .` in the backend directory. Then you can run `docker run -p 8000:8000 backend-dev` to start the container.
 
+I use [Ruff](https://docs.astral.sh/ruff/) for Python linting and formatting.
+
 ### Frontend
 
 [Install Node](https://nodejs.org/en/download),cd into the frontend directory, run `npm install` to install dependencies, then run `npm run dev` to start the dev server.
