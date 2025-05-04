@@ -81,7 +81,7 @@ async def get_user_votes(request: Request):
     username = user_url.split("@")[0]
     with Session(engine) as session:  # gets instance ID
         statement = select(instance.id).where(instance.domain == user_instance)
-        instance_id = session.exec(statement)
+        instance_id = session.exec(statement).first()
 
         for i in instance_id:
             print(i)
