@@ -108,9 +108,9 @@ async def get_votes(request: Request):
         return JSONResponse(content={"error": "Post ID is required"}, status_code=400)
 
     if post_type == "comment":
-        comment = True
+        like_type = "comment"
     else:
-        comment = False
+        like_type = "post"
     parsed = urlparse(post_url)
     post_instance = parsed.netloc
     original_post_id = parsed.path.rsplit("/", 1)[-1]
