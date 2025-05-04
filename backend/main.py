@@ -83,9 +83,6 @@ async def get_user_votes(request: Request):
         statement = select(instance.id).where(instance.domain == user_instance)
         instance_id = session.exec(statement).first()
 
-        for i in instance_id:
-            print(i)
-
         statement = select(
             person
         ).where(
