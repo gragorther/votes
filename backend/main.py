@@ -78,7 +78,7 @@ async def get_user_votes(request: Request):
     )[
         1
     ]  # splits the user url (such as lena@gregtech.eu) by the @ symbol, then gets the second element from that list
-    username = user_url.split("@")[1]
+    username = user_url.split("@")[0]
     with Session(engine) as session:  # gets instance ID
         statement = select(instance.id).where(instance.domain == user_instance)
         instance_id = session.exec(statement)
