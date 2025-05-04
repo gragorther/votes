@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 import os
 import aiohttp
 from urllib.parse import urlparse  # this is one very useful library
-from sqlmodel import Field, Session, SQLModel, create_engine, select, where
+from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 # Configuration variables
 origin = os.environ["FRONTEND_URL"]
