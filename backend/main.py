@@ -50,7 +50,7 @@ app.add_middleware(
 )
 
 
-class postLike(SQLModel, table=True):
+class post_like(SQLModel, table=True):
     post_id: int = Field(primary_key=True)
     person_id: int = Field(primary_key=True)
     score: int
@@ -93,7 +93,7 @@ async def get_user_votes(request: Request):
         )  # the first one is the instance ID from the database, the other is the one acquired from the block above
         person_id = session.exec(statement)
 
-        statement = select(postLike).where(postLike.person_id == person_id)
+        statement = select(post_like).where(post_like.person_id == person_id)
         likes = session.exec(statement)
     print(likes)
     return JSONResponse(content={"likes": likes})
