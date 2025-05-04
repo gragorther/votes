@@ -84,11 +84,11 @@ async def get_user_votes(request: Request):
         instance_id = session.exec(statement).first()
 
         statement = select(
-            person
+            person.id
         ).where(
             person.instance_id == instance_id and person.name == username
         )  # the first one is the instance ID from the database, the other is the one acquired from the block above
-        person_id = session.exec(statement)
+        person_id = session.exec(statement).first()
 
         statement = select(post_like).where(post_like.person_id == person_id)
         likes = session.exec(statement)
