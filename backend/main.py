@@ -94,6 +94,7 @@ async def get_user_votes(request: Request):
     with Session(engine) as session:  # gets likes
         statement = select(post_like).where(post_like.person_id == person_id)
         likes = session.exec(statement)
+    print(likes)
     return JSONResponse(content={"likes": likes})
 
 
