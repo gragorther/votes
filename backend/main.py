@@ -122,7 +122,7 @@ async def get_votes(request: Request):
     ) as op_resolve_response:
         op_resolve_response.raise_for_status()
         op_data = await op_resolve_response.json()
-        if comment is True:
+        if like_type == "comment":
             op_post_url = op_data["comment_view"]["comment"]["ap_id"]
         else:
             op_post_url = op_data["post_view"]["post"]["ap_id"]
@@ -134,7 +134,7 @@ async def get_votes(request: Request):
     ) as resolve_response:
         resolve_response.raise_for_status()
         data = await resolve_response.json()
-        if comment is True:
+        if like_type == "comment":
             post_id = data["comment"]["comment"]["id"]
         else:
             post_id = data["post"]["post"]["id"]
