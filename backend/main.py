@@ -64,7 +64,7 @@ class person(SQLModel, table=True):
     actor_id: str
 
 
-class instance(SQLModel, table=True):
+class Instance(SQLModel, table=True):
     id: int = Field(primary_key=True)
     domain: str
 
@@ -80,8 +80,10 @@ async def get_user_votes(request: Request):
     ]  # splits the user url (such as lena@gregtech.eu) by the @ symbol, then gets the second element from that list
     username = user_url.split("@")[1]
     with Session(engine) as session:  # gets instance ID
-        statement = select(instance).where(instance.domain == user_instance)
-        instance_id = session.exec(statement)["id"]
+        statement = select(Instance).where(Instance.domain == user_instance)
+        result = session.exec(statement)  #  returns a Result[Instance]
+        instance = result.first()  #  Instance | None
+        instance_id = instance.id
 
     with Session(engine) as session:  # gets person ID
         statement = select(
