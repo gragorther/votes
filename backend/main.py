@@ -51,21 +51,21 @@ app.add_middleware(
 
 
 class post_like(SQLModel, table=True):
-    post_id: int
-    person_id: int
+    post_id: int = Field(primary_key=True)
+    person_id: int = Field(primary_key=True)
     score: int
     published: int | None = None
 
 
 class person(SQLModel, table=True):
-    id: int
+    id: int = Field(primary_key=True)
     name: str
     instance_id: int
     actor_id: str
 
 
 class instance(SQLModel, table=True):
-    id: int
+    id: int = Field(primary_key=True)
     domain: str
 
 
