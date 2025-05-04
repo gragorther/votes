@@ -5,12 +5,17 @@ from contextlib import asynccontextmanager
 import os
 import aiohttp
 from urllib.parse import urlparse  # this is one very useful library
+from sqlmodel import Field, Session, SQLModel, create_engine, select, where
 
 # Configuration variables
 origin = os.environ["FRONTEND_URL"]
 username = os.environ["LEMMY_USERNAME"]
 password = os.environ["LEMMY_PASSWORD"]
-instance = os.environ["LEMMY_INSTANCE"]
+lemmy_instance = os.environ["LEMMY_INSTANCE"]
+database_url = os.environ["DATABASE_URL"]
+
+
+engine = create_engine(database_url, echo=True)
 
 
 @asynccontextmanager
@@ -45,6 +50,53 @@ app.add_middleware(
 )
 
 
+class post_like(SQLModel, table=True):
+    post_id: int
+    person_id: int
+    score: int
+    published: int | None = None
+
+
+class person(SQLModel, table=True):
+    id: int
+    name: str
+    instance_id: int
+    actor_id: str
+
+
+class instance(SQLModel, table=True):
+    id: int
+    domain: str
+
+
+@app.get("/api/user")
+async def get_user_votes(request: Request):
+    data = await request.json()
+    user_url = data.get("user_url")
+    user_instance = user_url.split(
+        "@"
+    )[
+        1
+    ]  # splits the user url (such as lena@gregtech.eu) by the @ symbol, then gets the second element from that list
+    username = user_url.split("@")[1]
+    with Session(engine) as session:  # gets instance ID
+        statement = select(instance).where(instance.domain == user_instance)
+        instance_id = session.exec(statement)["id"]
+
+    with Session(engine) as session:  # gets person ID
+        statement = select(
+            person
+        ).where(
+            person.instance_id == instance_id and person.name == username
+        )  # the first one is the instance ID from the database, the other is the one acquired from the block above
+        person_id = session.exec(statement)
+
+    with Session(engine) as session:  # gets likes
+        statement = select(post_like).where(post_like.person_id == person_id)
+        likes = session.exec(statement)
+    return JSONResponse(content={"likes": likes})
+
+
 @app.post("/api/votes")
 async def get_votes(request: Request):
     data = await request.json()
@@ -76,7 +128,7 @@ async def get_votes(request: Request):
             op_post_url = op_data["post_view"]["post"]["ap_id"]
 
     # Resolve the federated object into a post ID
-    resolve2_url = f"{instance}/api/v3/resolve_object"
+    resolve2_url = f"{lemmy_instance}/api/v3/resolve_object"
     async with app.state.http.get(
         resolve2_url, params={"q": op_post_url}
     ) as resolve_response:
@@ -92,7 +144,7 @@ async def get_votes(request: Request):
     per_page = 50  # Must be smaller than 50 due to Lemmy's limits
 
     while True:
-        likes_url = f"{instance}/api/v3/{like_type}/like/list?{like_type}_id={post_id}&page={page}&limit={per_page}"
+        likes_url = f"{lemmy_instance}/api/v3/{like_type}/like/list?{like_type}_id={post_id}&page={page}&limit={per_page}"
 
         headers = {"Authorization": f"Bearer {app.state.auth_token}"}
 

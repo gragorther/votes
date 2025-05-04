@@ -13,33 +13,56 @@
 	let postId = $state('');
 	let votes: Vote[] = $state([]);
 	let error = $state('');
-	let comment = $state(false);
 	let post_type: string = $state('');
 	let disabled = $state(false);
 	let buttonColor = $state('bg-blue-500');
 	let cursor = $state('');
 	let buttonCursor = $state('cursor-pointer');
+	let submittype = $state('post');
 
 	async function fetchVotes() {
 		console.log('Submitting post URL:', postId);
-		try {
-			//sends request
-			const response = await fetch(`${backend_url}/api/votes`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ post_url: postId, comment: comment })
-			});
 
-			const data = await response.json();
-			if (response.ok) {
-				votes = data.votes;
-				error = '';
-			} else {
-				error = data.error || 'An error occurred';
+		if (submittype === 'post' || submittype === 'comment')
+			try {
+				//sends request
+				const response = await fetch(`${backend_url}/api/${submittype}`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ post_url: postId, post_type: submittype })
+				});
+
+				const data = await response.json();
+				if (response.ok) {
+					votes = data.votes;
+					error = '';
+				} else {
+					error = data.error || 'An error occurred';
+				}
+			} catch (err) {
+				error = 'Failed to fetch votes';
+				console.error('Fetch error:', err);
 			}
-		} catch (err) {
-			error = 'Failed to fetch votes';
-			console.error('Fetch error:', err);
+		if (submittype === 'user') {
+			try {
+				//sends request
+				const response = await fetch(`${backend_url}/api/user`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ user_url: postId })
+				});
+
+				const data = await response.json();
+				if (response.ok) {
+					votes = data.votes;
+					error = '';
+				} else {
+					error = data.error || 'An error occurred';
+				}
+			} catch (err) {
+				error = 'Failed to fetch votes';
+				console.error('Fetch error:', err);
+			}
 		}
 	}
 
@@ -58,10 +81,12 @@
 	}
 
 	$effect(() => {
-		if (comment) {
-			post_type = 'Comment';
-		} else {
-			post_type = 'Post';
+		if (submittype == 'comment') {
+			post_type = 'Comment URL';
+		} else if (submittype == 'post') {
+			post_type = 'Post URL';
+		} else if (submittype == 'user') {
+			post_type = 'username@domain.tld';
 		}
 	});
 </script>
@@ -96,7 +121,7 @@
 					<input
 						type="text"
 						bind:value={postId}
-						placeholder="Enter {post_type} URL"
+						placeholder="Enter {post_type}"
 						class="self-stretch rounded-md border-2 border-orange-500 text-center"
 						onfocus={(e) => {
 							const input = e.target as HTMLInputElement | null;
@@ -106,8 +131,33 @@
 						}}
 						required
 					/><span>
-						<input type="checkbox" bind:checked={comment} id="post-or-comment" />
-						<label class="select-none" for="post-or-comment">This is a comment</label>
+						<fieldset>
+							<input
+								type="radio"
+								id="post"
+								name="submit-type"
+								value="post"
+								checked
+								bind:group={submittype}
+							/>
+							<label for="post">Post</label>
+							<input
+								type="radio"
+								id="comment"
+								name="submit-type"
+								value="comment"
+								bind:group={submittype}
+							/>
+							<label for="comment">Comment</label>
+							<input
+								type="radio"
+								id="user"
+								name="submit-type"
+								value="user"
+								bind:group={submittype}
+							/>
+							<label for="user">User</label>
+						</fieldset>
 					</span>
 					<button
 						type="submit"
