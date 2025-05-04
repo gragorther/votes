@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
     app.state.http = aiohttp.ClientSession()
 
     # Login to Lemmy
-    login_url = f"{instance}/api/v3/user/login"
+    login_url = f"{lemmy_instance}/api/v3/user/login"
     login_data = {"username_or_email": username, "password": password}
     async with app.state.http.post(login_url, json=login_data) as login_response:
         login_response.raise_for_status()
