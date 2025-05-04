@@ -101,16 +101,16 @@ async def get_user_votes(request: Request):
 async def get_votes(request: Request):
     data = await request.json()
     post_url = data.get("post_url")
-    comment = data.get("comment")
+    post_type = data.get("post_type")
     print(f"Getting post: {post_url}")
 
     if not post_url:
         return JSONResponse(content={"error": "Post ID is required"}, status_code=400)
 
-    if comment is True:
-        like_type = "comment"
+    if post_type == "comment":
+        comment = True
     else:
-        like_type = "post"
+        comment = False
     parsed = urlparse(post_url)
     post_instance = parsed.netloc
     original_post_id = parsed.path.rsplit("/", 1)[-1]

@@ -26,7 +26,7 @@
 		if (submittype === 'post' || submittype === 'comment')
 			try {
 				//sends request
-				const response = await fetch(`${backend_url}/api/${submittype}`, {
+				const response = await fetch(`${backend_url}/api/votes`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ post_url: postId, post_type: submittype })
