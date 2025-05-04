@@ -93,7 +93,13 @@ async def get_user_votes(request: Request):
         statement = select(post_like).where(post_like.person_id == person_id)
         likes = session.exec(statement)
     print(likes)
-    return JSONResponse(content={"likes": likes})
+    return JSONResponse(
+        content={
+            "post_url": likes.post_id.first(),
+            "score": likes.score.first(),
+            "published": likes.published.first(),
+        }
+    )
 
 
 @app.post("/api/votes")
