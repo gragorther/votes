@@ -72,32 +72,35 @@ class Instance(SQLModel, table=True):
 @app.post("/api/user")
 async def get_user_votes(request: Request):
     data = await request.json()
-    user_url = data.get("user_url")
-    user_instance = user_url.split(
-        "@"
-    )[
-        1
-    ]  # splits the user url (such as lena@gregtech.eu) by the @ symbol, then gets the second element from that list
-    username = user_url.split("@")[1]
-    with Session(engine) as session:  # gets instance ID
-        statement = select(Instance.id).where(Instance.domain == user_instance)
-        result = session.exec(statement)  #  returns a Result[Instance]
-        instance = result.first()  #  Instance | None
-        instance_id = instance.id
+    user_url = data.get("user_url") or ""
+    try:
+        username, user_instance = user_url.split("@", 1)
+    except ValueError:
+        return JSONResponse({"error": "Invalid user_url"}, status_code=400)
 
-    with Session(engine) as session:  # gets person ID
-        statement = select(
-            person.id
-        ).where(
-            person.instance_id == instance_id and person.name == username
-        )  # the first one is the instance ID from the database, the other is the one acquired from the block above
-        person_id = session.exec(statement)
+    with Session(engine) as session:
+        # 1) Grab the instance ID as a scalar
+        stmt = select(Instance.id).where(Instance.domain == user_instance)
+        instance_id = session.exec(stmt).scalar_one_or_none()
+        if instance_id is None:
+            return JSONResponse({"error": "Instance not found"}, status_code=404)
 
-    with Session(engine) as session:  # gets likes
-        statement = select(post_like).where(post_like.person_id == person_id)
-        likes = session.exec(statement)
-    print(likes)
-    return JSONResponse(content={"likes": likes})
+        # 2) Grab the person row
+        #    NOTE: use comma or & instead of Python `and`
+        stmt = select(person).where(
+            person.instance_id == instance_id,
+            person.name == username,
+        )
+        person_obj = session.exec(stmt).first()
+        if not person_obj:
+            return JSONResponse({"error": "User not found"}, status_code=404)
+
+        # 3) Grab all likes for that person_id
+        stmt = select(post_like).where(post_like.person_id == person_obj.id)
+        likes = session.exec(stmt).all()
+
+    # `likes` is now a list of PostLike objects; JSONResponse will convert them via pydantic
+    return JSONResponse(content={"likes": [l.dict() for l in likes]})
 
 
 @app.post("/api/votes")
