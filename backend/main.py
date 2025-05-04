@@ -73,34 +73,47 @@ class instance(SQLModel, table=True):
 async def get_user_votes(request: Request):
     data = await request.json()
     user_url = data.get("user_url")
-    user_instance = user_url.split(
-        "@"
-    )[
-        1
-    ]  # splits the user url (such as lena@gregtech.eu) by the @ symbol, then gets the second element from that list
-    username = user_url.split("@")[0]
-    with Session(engine) as session:  # gets instance ID
+
+    if not user_url or "@" not in user_url:
+        return JSONResponse(content={"error": "Invalid user_url"}, status_code=400)
+
+    username, user_instance = user_url.split("@", 1)
+
+    with Session(engine) as session:
+        # get instance ID
         statement = select(instance.id).where(instance.domain == user_instance)
         instance_id = session.exec(statement).first()
 
-        statement = select(
-            person.id
-        ).where(
-            person.instance_id == instance_id and person.name == username
-        )  # the first one is the instance ID from the database, the other is the one acquired from the block above
+        if not instance_id:
+            return JSONResponse(
+                content={"error": "Instance not found"}, status_code=404
+            )
+
+        # get person ID
+        statement = select(person.id).where(
+            (person.instance_id == instance_id) & (person.name == username)
+        )
         person_id = session.exec(statement).first()
 
-        statement = select(post_like).where(post_like.person_id == person_id)
-        likes = session.exec(statement).all()
+        if not person_id:
+            return JSONResponse(content={"error": "Person not found"}, status_code=404)
 
-    print(likes)
-    return JSONResponse(
-        content={
-            "post_url": likes.post_id,
-            "score": likes.score,
-            "published": likes.published,
+        # get likes
+        statement = select(post_like).where(post_like.person_id == person_id)
+        likes_result = session.exec(statement)
+        likes = likes_result.all()
+
+    # Build a list of likes to return
+    likes_list = [
+        {
+            "post_id": like.post_id,
+            "score": like.score,
+            "published": like.published,
         }
-    )
+        for like in likes
+    ]
+
+    return JSONResponse(content={"likes": likes_list})
 
 
 @app.post("/api/votes")
