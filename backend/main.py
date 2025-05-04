@@ -96,9 +96,9 @@ async def get_user_votes(request: Request):
     print(likes)
     return JSONResponse(
         content={
-            "post_url": likes.post_id.first(),
-            "score": likes.score.first(),
-            "published": likes.published.first(),
+            "post_url": likes.post_id,
+            "score": likes.score,
+            "published": likes.published,
         }
     )
 
