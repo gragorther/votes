@@ -50,21 +50,21 @@ app.add_middleware(
 )
 
 
-class Post_like(SQLModel, table=True):
+class post_like(SQLModel, table=True):
     post_id: int = Field(primary_key=True)
     person_id: int = Field(primary_key=True)
     score: int
     published: int | None = None
 
 
-class Person(SQLModel, table=True):
+class person(SQLModel, table=True):
     id: int = Field(primary_key=True)
     name: str
     instance_id: int
     actor_id: str
 
 
-class Instance(SQLModel, table=True):
+class instance(SQLModel, table=True):
     id: int = Field(primary_key=True)
     domain: str
 
@@ -72,34 +72,31 @@ class Instance(SQLModel, table=True):
 @app.post("/api/user")
 async def get_user_votes(request: Request):
     data = await request.json()
-    user_url = data.get("user_url", "")
-    # parse "username@instance"
-    try:
-        username, user_instance = user_url.split("@", 1)
-    except ValueError:
-        return JSONResponse({"error": "Invalid user_url format"}, status_code=400)
+    user_url = data.get("user_url")
+    user_instance = user_url.split(
+        "@"
+    )[
+        1
+    ]  # splits the user url (such as lena@gregtech.eu) by the @ symbol, then gets the second element from that list
+    username = user_url.split("@")[1]
+    with Session(engine) as session:  # gets instance ID
+        statement = select(instance.id).where(instance.domain == user_instance)
+        instance_id = session.exec(statement)
 
-    with Session(engine) as session:
-        # 1) grab the instance ID (scalar)
-        stmt = select(Instance.id).where(Instance.domain == user_instance)
-        instance_id = session.exec(stmt).scalars().one_or_none()
-        if instance_id is None:
-            return JSONResponse({"error": "Instance not found"}, status_code=404)
+        for i in instance_id:
+            print(i)
 
-        # 2) fetch the Person row
-        stmt = select(Person).where(
-            Person.instance_id == instance_id, Person.name == username
-        )
-        person_obj = session.exec(stmt).first()
-        if person_obj is None:
-            return JSONResponse({"error": "User not found"}, status_code=404)
+        statement = select(
+            person
+        ).where(
+            person.instance_id == instance_id and person.name == username
+        )  # the first one is the instance ID from the database, the other is the one acquired from the block above
+        person_id = session.exec(statement)
 
-        # 3) fetch all PostLike for that person
-        stmt = select(Post_like).where(Post_like.person_id == person_obj.id)
-        likes: list[Post_like] = session.exec(stmt).all()
-
-    # serialize out to JSON-friendly dicts
-    return JSONResponse({"likes": [like.dict() for like in likes]})
+        statement = select(post_like).where(post_like.person_id == person_id)
+        likes = session.exec(statement)
+    print(likes)
+    return JSONResponse(content={"likes": likes})
 
 
 @app.post("/api/votes")
