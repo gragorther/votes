@@ -69,7 +69,7 @@ class instance(SQLModel, table=True):
     domain: str
 
 
-@app.get("/api/user")
+@app.post("/api/user")
 async def get_user_votes(request: Request):
     data = await request.json()
     user_url = data.get("user_url")
