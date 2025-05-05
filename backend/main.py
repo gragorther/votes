@@ -70,11 +70,8 @@ class instance(SQLModel, table=True):
     domain: str
 
 
-@app.post("/api/user")
-async def get_user_votes(request: Request):
-    data = await request.json()
-    user_url = data.get("user_url")
-
+@app.get("/api/user/{user_url}")
+async def get_user_votes(user_url: str):
     if not user_url or "@" not in user_url:
         return JSONResponse(content={"error": "Invalid user_url"}, status_code=400)
 

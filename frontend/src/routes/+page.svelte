@@ -46,10 +46,8 @@
 		if (submittype === 'user') {
 			try {
 				//sends request
-				const response = await fetch(`${backend_url}/api/user`, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ user_url: postId })
+				const response = await fetch(`${backend_url}/api/user/${postId}`, {
+					method: 'GET'
 				});
 
 				const data = await response.json();
