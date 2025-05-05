@@ -109,7 +109,7 @@ async def get_user_votes(request: Request):
         {
             "post_id": like.post_id,
             "score": like.score,
-            "published": like.published.strftime(),
+            "published": like.published.isoformat(),
         }
         for like in likes
     ]
