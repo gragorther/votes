@@ -6,7 +6,7 @@ import os
 import aiohttp
 from urllib.parse import urlparse  # this is one very useful library
 from sqlmodel import Field, Session, SQLModel, create_engine, select
-import dateutil.parser as parser
+import datetime
 
 # Configuration variables
 origin = os.environ["FRONTEND_URL"]
@@ -109,7 +109,7 @@ async def get_user_votes(request: Request):
         {
             "post_id": like.post_id,
             "score": like.score,
-            "published": parser.parse(like.published),
+            "published": like.published.strftime(),
         }
         for like in likes
     ]
