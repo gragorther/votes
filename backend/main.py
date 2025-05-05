@@ -7,6 +7,7 @@ import aiohttp
 from urllib.parse import urlparse  # this is one very useful library
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 import datetime
+from sqlalchemy.orm import load_only
 
 # Configuration variables
 origin = os.environ["FRONTEND_URL"]
@@ -70,12 +71,19 @@ class instance(SQLModel, table=True):
     domain: str
 
 
+class post(SQLModel, table=True):
+    id: int = Field(primary_key=True)
+    creator_id: int
+    ap_id: str
+
+
 @app.get("/api/user/{user_url}")
 async def get_user_votes(user_url: str):
     if not user_url or "@" not in user_url:
         return JSONResponse(content={"error": "Invalid user_url"}, status_code=400)
+    print(f"Getting user: {user_url}")
 
-    username, user_instance = user_url.split("@", 1)
+    username, user_instance = user_url.rsplit("@", 1)
 
     with Session(engine) as session:
         # get instance ID
@@ -114,83 +122,91 @@ async def get_user_votes(user_url: str):
     return JSONResponse(content={"likes": likes_list})
 
 
-@app.post("/api/votes")
-async def get_votes(request: Request):
-    data = await request.json()
-    post_url = data.get("post_url")
-    post_type = data.get("post_type")
-    print(f"Getting post: {post_url}")
+@app.get("/api/post/{post_url}")
+async def get_post_votes(post_url: str):
+    with Session(engine) as session:
+        post_id = session.exec(select(post.id).where(post.ap_id == post_url)).first()
+        likes = session.exec(select.(post_like).where(post_like.post_id == post_id)).all()
+        likes += 1
 
-    if not post_url:
-        return JSONResponse(content={"error": "Post ID is required"}, status_code=400)
 
-    if post_type == "comment":
-        like_type = "comment"
-    else:
-        like_type = "post"
-    parsed = urlparse(post_url)
-    post_instance = parsed.netloc
-    original_post_id = parsed.path.rsplit("/", 1)[-1]
+# @app.post("/api/votes")
+# async def get_votes(request: Request):
+#     data = await request.json()
+#     post_url = data.get("post_url")
+#     post_type = data.get("post_type")
+#     print(f"Getting post: {post_url}")
 
-    # get the original post URL from OP's instance (resolve_object can't resolve stuff retrieved via non-poster instances)
-    resolve1_url = f"https://{post_instance}/api/v3/{like_type}"
-    async with app.state.http.get(
-        resolve1_url, params={"id": original_post_id}
-    ) as op_resolve_response:
-        op_resolve_response.raise_for_status()
-        op_data = await op_resolve_response.json()
-        if like_type == "comment":
-            op_post_url = op_data["comment_view"]["comment"]["ap_id"]
-        else:
-            op_post_url = op_data["post_view"]["post"]["ap_id"]
+#     if not post_url:
+#         return JSONResponse(content={"error": "Post ID is required"}, status_code=400)
 
-    # Resolve the federated object into a post ID
-    resolve2_url = f"{lemmy_instance}/api/v3/resolve_object"
-    async with app.state.http.get(
-        resolve2_url, params={"q": op_post_url}
-    ) as resolve_response:
-        resolve_response.raise_for_status()
-        data = await resolve_response.json()
-        if like_type == "comment":
-            post_id = data["comment"]["comment"]["id"]
-        else:
-            post_id = data["post"]["post"]["id"]
+#     if post_type == "comment":
+#         like_type = "comment"
+#     else:
+#         like_type = "post"
+#     parsed = urlparse(post_url)
+#     post_instance = parsed.netloc
+#     original_post_id = parsed.path.rsplit("/", 1)[-1]
 
-    votes = []
-    page = 1
-    per_page = 50  # Must be smaller than 50 due to Lemmy's limits
+#     # get the original post URL from OP's instance (resolve_object can't resolve stuff retrieved via non-poster instances)
+#     resolve1_url = f"https://{post_instance}/api/v3/{like_type}"
+#     async with app.state.http.get(
+#         resolve1_url, params={"id": original_post_id}
+#     ) as op_resolve_response:
+#         op_resolve_response.raise_for_status()
+#         op_data = await op_resolve_response.json()
+#         if like_type == "comment":
+#             op_post_url = op_data["comment_view"]["comment"]["ap_id"]
+#         else:
+#             op_post_url = op_data["post_view"]["post"]["ap_id"]
 
-    while True:
-        likes_url = f"{lemmy_instance}/api/v3/{like_type}/like/list?{like_type}_id={post_id}&page={page}&limit={per_page}"
+#     # Resolve the federated object into a post ID
+#     resolve2_url = f"{lemmy_instance}/api/v3/resolve_object"
+#     async with app.state.http.get(
+#         resolve2_url, params={"q": op_post_url}
+#     ) as resolve_response:
+#         resolve_response.raise_for_status()
+#         data = await resolve_response.json()
+#         if like_type == "comment":
+#             post_id = data["comment"]["comment"]["id"]
+#         else:
+#             post_id = data["post"]["post"]["id"]
 
-        headers = {"Authorization": f"Bearer {app.state.auth_token}"}
+#     votes = []
+#     page = 1
+#     per_page = 50  # Must be smaller than 50 due to Lemmy's limits
 
-        async with app.state.http.get(likes_url, headers=headers) as likes_response:
-            if likes_response.status != 200:
-                text = await likes_response.text()
-                return JSONResponse(
-                    content={"error": f"Failed to retrieve {like_type} likes: {text}"},
-                    status_code=likes_response.status,
-                )
+#     while True:
+#         likes_url = f"{lemmy_instance}/api/v3/{like_type}/like/list?{like_type}_id={post_id}&page={page}&limit={per_page}"
 
-            likes_data = await likes_response.json()
+#         headers = {"Authorization": f"Bearer {app.state.auth_token}"}
 
-        post_likes = likes_data.get(f"{like_type}_likes")
+#         async with app.state.http.get(likes_url, headers=headers) as likes_response:
+#             if likes_response.status != 200:
+#                 text = await likes_response.text()
+#                 return JSONResponse(
+#                     content={"error": f"Failed to retrieve {like_type} likes: {text}"},
+#                     status_code=likes_response.status,
+#                 )
 
-        if not post_likes:
-            break
+#             likes_data = await likes_response.json()
 
-        for vote in post_likes:
-            user = vote["creator"]["name"]
-            actor_id = vote["creator"]["actor_id"]
-            score = vote["score"]
+#         post_likes = likes_data.get(f"{like_type}_likes")
 
-            # Extract instance from actor_id
-            parsed_url = urlparse(actor_id)
-            instance_domain = parsed_url.netloc
+#         if not post_likes:
+#             break
 
-            votes.append({"user": user, "instance": instance_domain, "vote": score})
+#         for vote in post_likes:
+#             user = vote["creator"]["name"]
+#             actor_id = vote["creator"]["actor_id"]
+#             score = vote["score"]
 
-        page += 1
+#             # Extract instance from actor_id
+#             parsed_url = urlparse(actor_id)
+#             instance_domain = parsed_url.netloc
 
-    return JSONResponse(content={"votes": votes})
+#             votes.append({"user": user, "instance": instance_domain, "vote": score})
+
+#         page += 1
+
+#     return JSONResponse(content={"votes": votes})
