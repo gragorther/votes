@@ -53,7 +53,7 @@ app.add_middleware(
 
 
 class post_like(SQLModel, table=True):
-    post_id: int = Field(primary_key=True)
+    post_id: int = Field(primary_key=True, foreign_key="post.id")
     person_id: int = Field(primary_key=True)
     score: int
     published: int | None = None
@@ -62,7 +62,7 @@ class post_like(SQLModel, table=True):
 class person(SQLModel, table=True):
     id: int = Field(primary_key=True)
     name: str
-    instance_id: int
+    instance_id: int = Field(foreign_key="instance.id")
     actor_id: str
 
 
@@ -73,7 +73,7 @@ class instance(SQLModel, table=True):
 
 class post(SQLModel, table=True):
     id: int = Field(primary_key=True)
-    creator_id: int
+    creator_id: int = Field(foreign_key="person.id")
     ap_id: str
 
 
@@ -114,7 +114,7 @@ async def get_user_votes(user_url: str):
         {
             "post_id": like.post_id,
             "score": like.score,
-            "published": like.published.isoformat(),
+            "published": like.published.timestamp(),
         }
         for like in likes
     ]
@@ -125,9 +125,14 @@ async def get_user_votes(user_url: str):
 @app.get("/api/post/{post_url}")
 async def get_post_votes(post_url: str):
     with Session(engine) as session:
-        post_id = session.exec(select(post.id).where(post.ap_id == post_url)).first()
-        likes = session.exec(select.(post_like).where(post_like.post_id == post_id)).all()
-        likes += 1
+        # post_id = session.exec(select(post.id).where(post.ap_id == post_url)).first()
+        likes = session.exec(
+            select(post_like, person, post).where(
+                post.ap_id == post_url,
+            )
+        ).all()
+    likes_list = [{"user": like.person_id, "score": like.score} for like in likes]
+    return JSONResponse(content={"likes": likes_list})
 
 
 # @app.post("/api/votes")
