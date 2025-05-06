@@ -7,7 +7,6 @@ import aiohttp
 from urllib.parse import urlparse  # this is one very useful library
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 import datetime
-from sqlalchemy.orm import load_only
 
 # Configuration variables
 origin = os.environ["FRONTEND_URL"]
@@ -125,13 +124,14 @@ async def get_user_votes(user_url: str):
 @app.get("/api/post/{post_url}")
 async def get_post_votes(post_url: str):
     with Session(engine) as session:
-        # post_id = session.exec(select(post.id).where(post.ap_id == post_url)).first()
+        post_id = session.exec(select(post.id).where(post.ap_id == post_url)).first()
         likes = session.exec(
-            select(post_like, person, post).where(
-                post.ap_id == post_url,
-            )
+            select(post_like, person).join(person).where(post_like.post_id == post_id)
         ).all()
-    likes_list = [{"user": like.person_id, "score": like.score} for like in likes]
+
+    likes_list = [
+        {"user": like.person.name, "score": like.post_like.score} for like in likes
+    ]
     return JSONResponse(content={"likes": likes_list})
 
 
