@@ -5,8 +5,9 @@ from contextlib import asynccontextmanager
 import os
 import aiohttp
 from urllib.parse import urlparse  # this is one very useful library
-from sqlmodel import Field, Session, SQLModel, create_engine, select
+from sqlmodel import Field, Session, SQLModel, create_engine, select, Relationship
 import datetime
+from typing import Annotated
 
 # Configuration variables
 origin = os.environ["FRONTEND_URL"]
@@ -121,13 +122,15 @@ async def get_user_votes(user_url: str):
     return JSONResponse(content={"likes": likes_list})
 
 
-@app.get("/api/post/{post_url}")
+@app.get("/api/post/")
 async def get_post_votes(post_url: str):
+    print(post_url)
     with Session(engine) as session:
         post_id = session.exec(select(post.id).where(post.ap_id == post_url)).first()
         likes = session.exec(
-            select(post_like, person).join(person).where(post_like.post_id == post_id)
-        ).all()
+            select(post_like).join(person).where(post.ap_id == post_url)
+        )
+        print(likes)
 
     likes_list = [
         {"user": like.person.name, "score": like.post_like.score} for like in likes
