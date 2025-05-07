@@ -122,20 +122,28 @@ async def get_user_votes(user_url: str):
     return JSONResponse(content={"likes": likes_list})
 
 
+from sqlmodel import select
+
 @app.get("/api/post/")
 async def get_post_votes(post_url: str):
-    print(post_url)
+    # Define the subquery for post.id
+    post_id_sq = select(post.id).where(post.ap_id == post_url).scalar_subquery()
+
     with Session(engine) as session:
-        post_id = session.exec(select(post.id).where(post.ap_id == post_url)).first()
-        likes = session.exec(
-            select(post_like).join(person).where(post.ap_id == post_url)
+        stmt = (
+            select(post_like, person)
+            .select_from(post_like)
+            .join(person, post_like.person_id == person.id)
+            .where(post_like.post_id == post_id_sq)
         )
-        print(likes)
+        rows = session.exec(stmt).all()
 
     likes_list = [
-        {"user": like.person.name, "score": like.post_like.score} for like in likes
+        {"user": person.name, "score": like.score}
+        for like, person in rows
     ]
     return JSONResponse(content={"likes": likes_list})
+
 
 
 # @app.post("/api/votes")
