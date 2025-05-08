@@ -43,25 +43,6 @@
 				error = 'Failed to fetch votes';
 				console.error('Fetch error:', err);
 			}
-		if (submittype === 'user') {
-			try {
-				//sends request
-				const response = await fetch(`${backend_url}/api/user/${postId}`, {
-					method: 'GET'
-				});
-
-				const data = await response.json();
-				if (response.ok) {
-					votes = data.votes;
-					error = '';
-				} else {
-					error = data.error || 'An error occurred';
-				}
-			} catch (err) {
-				error = 'Failed to fetch votes';
-				console.error('Fetch error:', err);
-			}
-		}
 	}
 
 	async function handleSubmit(event: any) {
@@ -83,8 +64,6 @@
 			post_type = 'Comment URL';
 		} else if (submittype == 'post') {
 			post_type = 'Post URL';
-		} else if (submittype == 'user') {
-			post_type = 'username@domain.tld';
 		}
 	});
 </script>
@@ -147,14 +126,6 @@
 								bind:group={submittype}
 							/>
 							<label for="comment">Comment</label>
-							<input
-								type="radio"
-								id="user"
-								name="submit-type"
-								value="user"
-								bind:group={submittype}
-							/>
-							<label for="user">User</label>
 						</fieldset>
 					</span>
 					<button
