@@ -8,3 +8,13 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model person {
+    id Int @id
+    name String
+}
+model post {
+    id Int @id
+    ap_id String
+}
+
