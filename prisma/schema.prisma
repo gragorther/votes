@@ -1,8 +1,7 @@
 generator client {
   provider = "prisma-client-js"
-   url      = env("DATABASE_URL")
+  output   = "prismagenerated"
 }
-
 
 datasource db {
   provider = "postgresql"
@@ -10,11 +9,22 @@ datasource db {
 }
 
 model person {
-    id Int @id
-    name String
-}
-model post {
-    id Int @id
-    ap_id String
+  id        Int         @id
+  name      String
+  post_like post_like[]
 }
 
+model post {
+  id        Int         @id
+  ap_id     String
+  postLikes post_like[] // Relation field for all likes on this post
+}
+
+model post_like {
+  post_id   Int      @id
+  post      post     @relation(fields: [post_id], references: [id])
+  person    person   @relation(fields: [person_id], references: [id])
+  score     Int
+  published DateTime
+  person_id Int
+}

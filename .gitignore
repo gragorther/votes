@@ -19,3 +19,4 @@ vite.config.js.timestamp-*
 symlink-from
 .idea/
 build
+prisma/prismagenerated
