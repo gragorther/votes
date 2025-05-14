@@ -42,6 +42,7 @@
 	},
 	"dependencies": {
 		"@prisma/client": "^6.7.0",
+		"lemmy-js-client": "1.0.0-local-image-user.3",
 		"lucide-svelte": "^0.488.0",
 		"prisma": "^6.7.0"
 	}

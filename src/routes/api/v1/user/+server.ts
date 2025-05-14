@@ -12,9 +12,9 @@ function splitAtLastAt(str: string): [string, string] {
 
 export const GET: RequestHandler = async ({ url }) => {
   //validation
-  const userParam = url.searchParams.get('user');
+  const userParam = url.searchParams.get('q');
   if (!userParam) {
-    throw error(400, 'Missing user parameter');
+    throw error(400, 'Missing query parameter');
   }
 
   const [name, instanceDomain] = splitAtLastAt(userParam);
