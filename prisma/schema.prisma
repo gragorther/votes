@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "prismagenerated"
 }
 
 datasource db {
@@ -12,19 +11,30 @@ model person {
   id        Int         @id
   name      String
   post_like post_like[]
+  instance_id Int
+  instance instance @relation(fields: [instance_id],references: [id])
 }
 
 model post {
   id        Int         @id
   ap_id     String
-  postLikes post_like[] // Relation field for all likes on this post
+  post_like post_like[]
 }
 
 model post_like {
-  post_id   Int      @id
+  post_id   Int
+  person_id Int
   post      post     @relation(fields: [post_id], references: [id])
   person    person   @relation(fields: [person_id], references: [id])
   score     Int
   published DateTime
-  person_id Int
+
+  @@id([post_id, person_id])
+}
+
+model instance {
+  id Int @id
+  domain String
+
+  person person[]
 }
