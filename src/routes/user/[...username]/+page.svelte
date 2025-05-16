@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { ArrowBigDown, ArrowBigUp } from 'lucide-svelte';
 	import LikesList from '$lib/components/LikesList.svelte';
 	import Like from '$lib/components/Like.svelte';
 	export let data;
 	const username = data.username; // The username
 	const votes = data.user.votes; // The user's votes
 	import { formatDate } from '$lib/formatDate.ts';
+	import Downvote from '$lib/components/Downvote.svelte';
+	import Upvote from '$lib/components/Upvote.svelte';
 </script>
 
 <p>List of votes for {username}</p>
@@ -16,9 +17,9 @@
 			<a href={like.ap_id}>{like.ap_id}</a>
 
 			{#if like.score === -1}
-				<ArrowBigDown class="inline" color="#eb3434" />
+				<Downvote />
 			{:else}
-				<ArrowBigUp class="inline" color="#34a4e0" />
+				<Upvote />
 			{/if}
 			at {formatDate(like.published)}
 		</Like>

@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { ArrowBigDown, ArrowBigUp } from 'lucide-svelte';
 	import LikesList from '$lib/components/LikesList.svelte';
 	import Like from '$lib/components/Like.svelte';
 	export let data;
 	const comments = data.comment;
 	const comment_url = data.comment_url;
 	import { formatDate } from '$lib/formatDate.ts';
+	import Upvote from '$lib/components/Upvote.svelte';
+	import Downvote from '$lib/components/Downvote.svelte';
 </script>
 
 <p>List of votes for <a href={comment_url}>{comment_url}</a></p>
@@ -17,9 +18,9 @@
 			>
 
 			{#if like.score === -1}
-				<ArrowBigDown class="inline" color="#eb3434" />
+				<Downvote />
 			{:else}
-				<ArrowBigUp class="inline" color="#34a4e0" />
+				<Upvote />
 			{/if}
 			at {formatDate(like.published)}
 		</Like>
