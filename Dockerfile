@@ -37,6 +37,7 @@ RUN apt-get update -y \
 # Only prod deps & built files
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/build        ./build
+env PORT=3000
 
-EXPOSE 8000
+EXPOSE 3000
 CMD ["node", "build/index.js"]
