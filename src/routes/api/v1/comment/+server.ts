@@ -5,7 +5,9 @@ import { compile } from 'svelte/compiler';
 
 export const GET: RequestHandler = async ({ url }) => {
   const commentUrl =  url.searchParams.get('q');
+  
   if (!commentUrl) throw error(400, 'Missing “q” query param');
+  console.log(`Getting comment: ${commentUrl}`)
 
   const commentId = new URL(commentUrl).pathname.split('/').at(-1)
   const instance = new URL(commentUrl).host.toString()

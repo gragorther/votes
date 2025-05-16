@@ -6,6 +6,7 @@ import { compile } from 'svelte/compiler';
 export const GET: RequestHandler = async ({ url }) => {
   const postUrl =  url.searchParams.get('q');
   if (!postUrl) throw error(400, 'Missing “q” query param');
+  console.log(`Getting post: ${postUrl}`)
 
   const postId = new URL(postUrl).pathname.split('/').at(-1)
   const instance = new URL(postUrl).host.toString()
