@@ -30,6 +30,9 @@ RUN pnpm run build
 # --- production stage ---
 FROM node:20-slim AS production
 WORKDIR /app
+RUN apt-get update -y \
+ && apt-get install -y openssl libssl-dev \
+ && rm -rf /var/lib/apt/lists/*
 
 # Only prod deps & built files
 COPY --from=builder /app/node_modules ./node_modules
