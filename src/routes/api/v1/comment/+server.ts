@@ -1,12 +1,19 @@
 import { error, json } from '@sveltejs/kit';
 import db from '$lib/db';
 import type { RequestHandler } from './$types';
+import { compile } from 'svelte/compiler';
 
 export const GET: RequestHandler = async ({ url }) => {
-  const apId = url.searchParams.get('q');
-  if (!apId) throw error(400, 'Missing “q” query param');
+  const commentUrl =  url.searchParams.get('q');
+  if (!commentUrl) throw error(400, 'Missing “q” query param');
 
-  const commentLikes = await db.comment.findFirst({
+  const commentId = new URL(commentUrl).pathname.split('/').at(-1)
+  const instance = new URL(commentUrl).host.toString()
+  const response = await fetch(`https://${instance}/api/v3/comment?id=${commentId}`)
+  const responseJson = await response.json()
+  const apId = responseJson.comment_view?.comment?.ap_id;
+
+  const commentWithLikes = await db.comment.findFirst({
     where: { ap_id: apId },
     select: {
       ap_id: true,
@@ -23,7 +30,7 @@ export const GET: RequestHandler = async ({ url }) => {
     }
   });
 
-  if (!commentLikes) throw error(404, `Comment not found: ${apId}`);
+  if (!commentWithLikes) throw error(404, `comment not found: ${apId}`);
 
-  return json({ likes: commentLikes.comment_like });
+  return json({ likes: commentWithLikes.comment_like, apId: apId });
 };

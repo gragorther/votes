@@ -9,7 +9,7 @@
 	import Upvote from '$lib/components/Upvote.svelte';
 </script>
 
-<p>List of votes for {post_url}</p>
+<p>List of votes for <a href={post_url}>{post_url}</a></p>
 <LikesList>
 	{#each [...posts.likes].sort((a, b) => a.score - b.score) as like}
 		<Like>

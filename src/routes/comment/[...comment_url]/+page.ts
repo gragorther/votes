@@ -11,5 +11,5 @@ export const load: PageLoad = async ({ fetch, params }) => {
 
   const comment = await res.json();
 
-  return { comment, comment_url: params.comment_url };
+  return { comment, comment_url: comment.apId };
 };

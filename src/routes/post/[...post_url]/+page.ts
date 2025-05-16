@@ -11,5 +11,5 @@ export const load: PageLoad = async ({ fetch, params }) => {
 
   const post = await res.json();
 
-  return { post, post_url: params.post_url };
+  return { post, post_url: post.apId };
 };
