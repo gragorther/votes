@@ -28,7 +28,7 @@ RUN pnpm svelte-kit sync
 RUN pnpm run build
 
 # --- production stage ---
-FROM node:20-slim AS production
+FROM node:slim AS production
 WORKDIR /app
 RUN apt-get update -y \
  && apt-get install -y openssl libssl-dev \
