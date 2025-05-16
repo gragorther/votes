@@ -1,11 +1,12 @@
 import type { PageLoad } from './$types';
+import { error } from '@sveltejs/kit';
 
 export const load: PageLoad = async ({ fetch, params }) => {
 
   const res = await fetch(`/api/v1/comment?q=${params.comment_url}`);
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch comment: ${res.status}`);
+    throw error(404, 'Comment not found');
   }
 
   const comment = await res.json();

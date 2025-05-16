@@ -3,18 +3,17 @@
 	import LikesList from '$lib/components/LikesList.svelte';
 	import Like from '$lib/components/Like.svelte';
 	export let data;
-	const comments = data.comment;
-	const comment_url = data.comment_url;
+	const username = data.username; // The username
+	const votes = data.user.votes; // The user's votes
 	import { formatDate } from '$lib/formatDate.ts';
 </script>
 
-<p>List of votes for <a href={comment_url}>{comment_url}</a></p>
+<p>List of votes for {username}</p>
+<p>Total votes: {votes.length}</p>
 <LikesList>
-	{#each [...comments.likes].sort((a, b) => a.score - b.score) as like}
+	{#each [...votes].sort((a, b) => a.score - b.score) as like}
 		<Like>
-			<a href="https://{like.person.instance.domain}/u/{like.person.name}"
-				>{like.person.name}@{like.person.instance.domain}</a
-			>
+			<a href={like.ap_id}>{like.ap_id}</a>
 
 			{#if like.score === -1}
 				<ArrowBigDown class="inline" color="#eb3434" />
