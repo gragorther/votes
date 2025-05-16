@@ -1,5 +1,5 @@
 # --- base stage ---
-FROM node:latest AS base
+FROM node:slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -7,6 +7,8 @@ RUN corepack enable
 # --- builder stage ---
 FROM base AS builder
 WORKDIR /app
+RUN apt-get update -y \
+&& apt-get install -y openssl
 
 # 1) Copy manifests & prisma schema
 COPY package.json pnpm-lock.yaml ./
