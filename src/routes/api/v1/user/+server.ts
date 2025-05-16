@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit';
-import db from '$lib/db';
+import {db} from '$lib/db';
 import type { RequestHandler } from './$types';
 
 function splitAtLastAt(str: string): [string, string] {
