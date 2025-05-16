@@ -6,7 +6,7 @@ export const GET: RequestHandler = async ({ url }) => {
   const apId = url.searchParams.get('q');
   if (!apId) throw error(400, 'Missing “q” query param');
 
-  const commentWithLikes = await db.comment.findFirst({
+  const commentLikes = await db.comment.findFirst({
     where: { ap_id: apId },
     select: {
       ap_id: true,
@@ -23,7 +23,7 @@ export const GET: RequestHandler = async ({ url }) => {
     }
   });
 
-  if (!commentWithLikes) throw error(404, `Comment not found: ${apId}`);
+  if (!commentLikes) throw error(404, `Comment not found: ${apId}`);
 
-  return json({ likes: commentWithLikes.comment_like });
+  return json({ likes: commentLikes.comment_like });
 };
