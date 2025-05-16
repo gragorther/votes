@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model person {
+  id           Int            @id
+  name         String
+  post_like    post_like[]
+  instance_id  Int
+  instance     instance       @relation(fields: [instance_id], references: [id])
+  comment_like comment_like[]
+}
+
+model post {
+  id        Int         @id
+  ap_id     String
+  post_like post_like[]
+}
+
+model comment {
+  id           Int            @id
+  ap_id        String
+  comment_like comment_like[]
+}
+
+model post_like {
+  post_id   Int
+  person_id Int
+  post      post     @relation(fields: [post_id], references: [id])
+  person    person   @relation(fields: [person_id], references: [id])
+  score     Int
+  published DateTime
+
+  @@id([post_id, person_id])
+}
+
+model comment_like {
+  comment_id Int
+  person_id  Int
+  comment    comment  @relation(fields: [comment_id], references: [id])
+  person     person   @relation(fields: [person_id], references: [id])
+  score      Int
+  published  DateTime
+
+  @@id([comment_id, person_id])
+}
+
+model instance {
+  id     Int    @id
+  domain String
+
+  person person[]
+}
