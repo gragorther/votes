@@ -21,7 +21,7 @@
 			/>
 		</picture>
 
-		<h1 class="text-center text-4xl">Lemvotes</h1></span
+		<h1 class="text-center text-4xl"><a href="/" class="text-inherit">Lemvotes</a></h1></span
 	>
 
 	{@render children()}
