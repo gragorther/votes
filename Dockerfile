@@ -8,7 +8,9 @@ RUN corepack enable
 FROM base AS builder
 WORKDIR /app
 RUN apt-get update -y \
-&& apt-get install -y openssl
+ && apt-get install -y openssl libssl-dev \
+ && rm -rf /var/lib/apt/lists/*
+
 
 # 1) Copy manifests & prisma schema
 COPY package.json pnpm-lock.yaml ./
