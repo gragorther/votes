@@ -2,6 +2,6 @@
 	let { children } = $props();
 </script>
 
-<li class="rounded border p-1 text-center">
+<li class="rounded border break-normal p-1 text-center">
 	{@render children()}
 </li>
