@@ -61,7 +61,8 @@
 			<a
 				type="submit"
 				class="cursor-pointer self-center rounded bg-blue-500 px-4 py-2 text-white"
-				href={redirect_url}
+				href={redirect_url.replace(/https:\/\//g, '')}
+				data-sveltekit-preload-data="hover"
 			>
 				Get Votes
 			</a>
