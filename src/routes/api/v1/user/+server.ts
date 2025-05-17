@@ -16,7 +16,7 @@ export const GET: RequestHandler = async ({ url }) => {
   if (!userParam) {
     throw error(400, 'Missing query parameter');
   }
-  console.log(`Getting comment: ${userParam}`)
+  console.log(`Getting user: ${userParam}`)
 
   const [name, instanceDomain] = splitAtLastAt(userParam);
 
