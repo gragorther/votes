@@ -1,7 +1,6 @@
 <script lang="ts">
 	import LikesList from '$lib/components/LikesList.svelte';
 	import Like from '$lib/components/Like.svelte';
-	import { formatDate } from '$lib/formatDate.ts';
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Upvote from '$lib/components/Upvote.svelte';
 	import Time from '$lib/components/Time.svelte';
