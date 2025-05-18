@@ -27,9 +27,9 @@
 	}
 </script>
 
-<div class="flex items-center justify-center">
+<div class=" mt-6 flex items-center justify-center">
 	<div
-		class="max-w-xl content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
+		class="w-full max-w-md content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
 	>
 		<p>Use the following form to get votes</p>
 		<form
@@ -38,12 +38,12 @@
 			method="GET"
 			onsubmit={onSubmit}
 		>
-			<fieldset disabled={loading}>
+			<fieldset disabled={loading} class=" flex flex-col gap-1.5">
 				<input
 					type="text"
 					bind:value={query}
 					placeholder={input_placeholder}
-					class="self-stretch rounded-md border-2 border-orange-500 text-center"
+					class="w-full self-stretch rounded-md border-2 border-orange-500 text-center"
 					onfocus={(e) => {
 						const input = e.target as HTMLInputElement | null;
 						if (input) {
@@ -51,29 +51,29 @@
 						}
 					}}
 					required
-				/><span>
-					<fieldset>
-						<input
-							type="radio"
-							id="post"
-							name="submit-type"
-							value="post"
-							checked
-							bind:group={query_type}
-						/>
-						<label for="post">Post</label>
-						<input
-							type="radio"
-							id="comment"
-							name="submit-type"
-							value="comment"
-							bind:group={query_type}
-						/>
-						<label for="comment">Comment</label>
-						<input type="radio" id="user" name="submit-type" value="user" bind:group={query_type} />
-						<label for="user">User</label>
-					</fieldset>
-				</span>
+				/>
+				<fieldset class="flex flex-row justify-center gap-2">
+					<input
+						type="radio"
+						id="post"
+						name="submit-type"
+						value="post"
+						checked
+						bind:group={query_type}
+					/>
+					<label for="post">Post</label>
+					<input
+						type="radio"
+						id="comment"
+						name="submit-type"
+						value="comment"
+						bind:group={query_type}
+					/>
+					<label for="comment">Comment</label>
+					<input type="radio" id="user" name="submit-type" value="user" bind:group={query_type} />
+					<label for="user">User</label>
+				</fieldset>
+
 				<button
 					type="submit"
 					class="cursor-pointer self-center rounded {buttonColor} px-4 py-2 text-white"
