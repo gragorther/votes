@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	let query: string = $state('');
 	let query_type = $state('post');
 
@@ -14,7 +15,11 @@
 		}
 	});
 
-	let redirect_url = $derived(`/${query_type}/${query}`);
+	let redirect_url = $derived(`/${query_type}/${query}`.replace(/https:\/\//g, ''));
+
+	function onSubmit(event: any) {
+		event.preventDefault();
+	}
 </script>
 
 <div class="flex items-center justify-center">
@@ -22,7 +27,11 @@
 		class="max-w-xl content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
 	>
 		<p>Use the following form to get votes</p>
-		<form class="mt-2 flex flex-col flex-wrap justify-center gap-2 select-none">
+		<form
+			class="mt-2 flex flex-col flex-wrap justify-center gap-2 select-none"
+			action={redirect_url}
+			method="GET"
+		>
 			<input
 				type="text"
 				bind:value={query}
@@ -58,13 +67,12 @@
 					<label for="user">User</label>
 				</fieldset>
 			</span>
-			<a
+			<button
 				type="submit"
 				class="cursor-pointer self-center rounded bg-blue-500 px-4 py-2 text-white"
-				href={redirect_url.replace(/https:\/\//g, '')}
 			>
 				Get Votes
-			</a>
+			</button>
 		</form>
 	</div>
 </div>

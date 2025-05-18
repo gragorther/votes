@@ -1,12 +1,12 @@
 <script lang="ts">
 	import LikesList from '$lib/components/LikesList.svelte';
 	import Like from '$lib/components/Like.svelte';
-	export let data;
-	const posts = data.post;
-	const post_url = data.post_url;
 	import { formatDate } from '$lib/formatDate.ts';
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Upvote from '$lib/components/Upvote.svelte';
+	let { data } = $props();
+	const posts = data.post;
+	const post_url = data.post_url;
 </script>
 
 <p>List of votes for <a href={post_url}>{post_url}</a></p>

@@ -1,12 +1,11 @@
 <script lang="ts">
 	import LikesList from '$lib/components/LikesList.svelte';
 	import Like from '$lib/components/Like.svelte';
-	export let data;
-	const votes = data.user.votes; // The user's votes
 	import { formatDate } from '$lib/formatDate.ts';
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Upvote from '$lib/components/Upvote.svelte';
-	console.log(data.user.instance);
+	let { data } = $props();
+	const votes = data.user.votes; // The user's votes
 </script>
 
 <p>List of votes for {data.user.name}@{data.user.instance.domain}</p>
