@@ -22,10 +22,14 @@ export const GET: RequestHandler = async ({ url }) => {
 
   const postLike = await db.person.findFirst({
     where: {
-      name,
-      instance: { domain: instanceDomain }
+      name:{
+        equals: name, 
+        mode: 'insensitive'
+      },
+      instance: { domain:{equals: instanceDomain, mode: 'insensitive'} }, 
     },
     select: {
+      name: true, instance: true,
       post_like: {
         select: {
           score: true,
@@ -46,6 +50,6 @@ export const GET: RequestHandler = async ({ url }) => {
       score,
       published,
       ap_id: post.ap_id
-    }))
+    })), name: postLike.name, instance: postLike.instance
   });
 };

@@ -2,14 +2,14 @@
 	import LikesList from '$lib/components/LikesList.svelte';
 	import Like from '$lib/components/Like.svelte';
 	export let data;
-	const username = data.username; // The username
 	const votes = data.user.votes; // The user's votes
 	import { formatDate } from '$lib/formatDate.ts';
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Upvote from '$lib/components/Upvote.svelte';
+	console.log(data.user.instance);
 </script>
 
-<p>List of votes for {username}</p>
+<p>List of votes for {data.user.name}@{data.user.instance.domain}</p>
 <p>Total votes: {votes.length}</p>
 <LikesList>
 	{#each [...votes].sort((a, b) => a.score - b.score) as like}
