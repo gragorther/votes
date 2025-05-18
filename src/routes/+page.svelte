@@ -33,12 +33,12 @@
 	>
 		<p>Use the following form to get votes</p>
 		<form
-			class="mt-2 flex flex-col flex-wrap justify-center gap-2 select-none"
+			class="mt-2 flex flex-col flex-wrap justify-center select-none"
 			action={redirectUrl}
 			method="GET"
 			onsubmit={onSubmit}
 		>
-			<fieldset disabled={loading} class=" flex flex-col gap-1.5">
+			<fieldset disabled={loading} class="flex flex-col gap-1.5">
 				<input
 					type="text"
 					bind:value={query}
@@ -73,16 +73,17 @@
 					<input type="radio" id="user" name="submit-type" value="user" bind:group={query_type} />
 					<label for="user">User</label>
 				</fieldset>
-
-				<button
-					type="submit"
-					class="cursor-pointer self-center rounded {buttonColor} px-4 py-2 text-white"
-				>
-					Get Votes
-				</button>
-				{#if loading}
-					<Loader class="inline animate-spin" />
-				{/if}
+				<span>
+					<button
+						type="submit"
+						class="cursor-pointer self-center rounded {buttonColor} px-4 py-2 text-white"
+					>
+						Get Votes
+					</button>
+					{#if loading}
+						<Loader class="inline animate-spin" />
+					{/if}
+				</span>
 			</fieldset>
 		</form>
 	</div>
