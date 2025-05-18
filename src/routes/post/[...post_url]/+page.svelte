@@ -10,6 +10,7 @@
 </script>
 
 <p>List of votes for <a href={post_url}>{post_url}</a></p>
+<svelte:head><title>Lemvotes - {post_url}</title></svelte:head>
 <LikesList>
 	{#each [...posts.likes].sort((a, b) => a.score - b.score) as like}
 		<Like>

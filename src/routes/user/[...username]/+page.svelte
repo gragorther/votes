@@ -11,6 +11,8 @@
 
 <p>List of votes for {data.user.name}@{data.user.instance.domain}</p>
 <p>Total votes: {votes.length}</p>
+
+<svelte:head><title>Lemvotes - {data.user.name}@{data.user.instance.domain}</title></svelte:head>
 <LikesList>
 	{#each [...votes].sort((a, b) => a.score - b.score) as like}
 		<Like>
