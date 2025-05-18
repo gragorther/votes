@@ -6,7 +6,7 @@
 
 <svelte:head><title>Lemvotes</title></svelte:head>
 <main class="text-center">
-	<span class=" flex justify-center">
+	<span class="flex justify-center">
 		<picture class="inline size-10">
 			<!-- User prefers light mode: -->
 			<source srcset="/favicon.png" media="(prefers-color-scheme: light)" />

@@ -4,6 +4,7 @@
 	import { formatDate } from '$lib/formatDate.ts';
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Upvote from '$lib/components/Upvote.svelte';
+	import Time from '$lib/components/Time.svelte';
 	let { data } = $props();
 	const votes = data.user.votes; // The user's votes
 </script>
@@ -22,7 +23,7 @@
 			{:else}
 				<Upvote />
 			{/if}
-			at {formatDate(like.published)}
+			at <Time time={like.published} />
 		</Like>
 	{/each}
 </LikesList>
