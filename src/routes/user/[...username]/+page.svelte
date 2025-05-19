@@ -13,7 +13,7 @@
 </script>
 
 <p>List of votes for {username}</p>
-<p>Total votes: {postVotes.length}</p>
+<p>Total votes: {allVotes.length}</p>
 
 <svelte:head><title>Lemvotes - {username}</title></svelte:head>
 <LikesList>
