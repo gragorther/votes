@@ -4,7 +4,7 @@
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Upvote from '$lib/components/Upvote.svelte';
 	import Time from '$lib/components/Time.svelte';
-	import { sortByPublished } from '$lib/sortByPublished.js';
+	import { sortByPublished } from '$lib/sortByPublished.ts';
 	let { data } = $props();
 	const username = data.username;
 	const postVotes = data.postVotes.votes; // The user's votes
@@ -20,7 +20,6 @@
 	{#each sortByPublished([...allVotes]) as like}
 		<Like>
 			<a href={like.ap_id}>{like.ap_id}</a>
-
 			{#if like.score === -1}
 				<Downvote />
 			{:else}

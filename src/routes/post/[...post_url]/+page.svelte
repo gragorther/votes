@@ -4,7 +4,7 @@
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Upvote from '$lib/components/Upvote.svelte';
 	import Time from '$lib/components/Time.svelte';
-	import { sortByPublished } from '$lib/sortByPublished.js';
+	import { sortByPublished } from '$lib/sortByPublished.ts';
 	let { data } = $props();
 	const posts = data.post;
 	const post_url = data.post_url;

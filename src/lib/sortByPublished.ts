@@ -6,8 +6,8 @@ export function sortByPublished(votes: Vote[], opts?: { descendingTime?: boolean
     if (a.score !== b.score) {
       return a.score - b.score;
     }
-    const diff = new Date(a.published).getTime()
-               - new Date(b.published).getTime();
+    const diff = new Date(b.published).getTime() - new Date(a.published).getTime();
+               
     return descendingTime ? -diff : diff;
   });
 }
