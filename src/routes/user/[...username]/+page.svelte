@@ -4,16 +4,20 @@
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Upvote from '$lib/components/Upvote.svelte';
 	import Time from '$lib/components/Time.svelte';
+	import { sortByPublished } from '$lib/sortByPublished.js';
 	let { data } = $props();
-	const votes = data.user.votes; // The user's votes
+	const username = data.username;
+	const postVotes = data.postVotes.votes; // The user's votes
+	const commentVotes = data.commentVotes.votes;
+	const allVotes = postVotes.concat(commentVotes);
 </script>
 
-<p>List of votes for {data.user.name}@{data.user.instance.domain}</p>
-<p>Total votes: {votes.length}</p>
+<p>List of votes for {username}</p>
+<p>Total votes: {postVotes.length}</p>
 
-<svelte:head><title>Lemvotes - {data.user.name}@{data.user.instance.domain}</title></svelte:head>
+<svelte:head><title>Lemvotes - {username}</title></svelte:head>
 <LikesList>
-	{#each [...votes].sort((a, b) => a.score - b.score) as like}
+	{#each sortByPublished([...allVotes]) as like}
 		<Like>
 			<a href={like.ap_id}>{like.ap_id}</a>
 

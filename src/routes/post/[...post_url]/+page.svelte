@@ -4,6 +4,7 @@
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Upvote from '$lib/components/Upvote.svelte';
 	import Time from '$lib/components/Time.svelte';
+	import { sortByPublished } from '$lib/sortByPublished.js';
 	let { data } = $props();
 	const posts = data.post;
 	const post_url = data.post_url;
@@ -12,7 +13,7 @@
 <p>List of votes for <a href={post_url}>{post_url}</a></p>
 <svelte:head><title>Lemvotes - {post_url}</title></svelte:head>
 <LikesList>
-	{#each [...posts.likes].sort((a, b) => a.score - b.score) as like}
+	{#each sortByPublished([...posts.likes]) as like}
 		<Like>
 			<a href="https://{like.person.instance.domain}/u/{like.person.name}"
 				>{like.person.name}@{like.person.instance.domain}</a

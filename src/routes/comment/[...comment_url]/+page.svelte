@@ -4,6 +4,7 @@
 	import Upvote from '$lib/components/Upvote.svelte';
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Time from '$lib/components/Time.svelte';
+	import { sortByPublished } from '$lib/sortByPublished.js';
 	let { data } = $props();
 	const comments = data.comment;
 	const comment_url = data.comment_url;
@@ -12,7 +13,7 @@
 <p>List of votes for <a href={comment_url}>{comment_url}</a></p>
 <svelte:head><title>Lemvotes - {comment_url}</title></svelte:head>
 <LikesList>
-	{#each [...comments.likes].sort((a, b) => a.score - b.score) as like}
+	{#each sortByPublished([...comments.likes]) as like}
 		<Like>
 			<a href="https://{like.person.instance.domain}/u/{like.person.name}"
 				>{like.person.name}@{like.person.instance.domain}</a

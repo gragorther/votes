@@ -1,14 +1,9 @@
 import { error, json } from '@sveltejs/kit';
 import {db} from '$lib/db';
-import type { RequestHandler } from './$types';
+import type { RequestHandler } from '../$types';
+import { splitAtLast } from '$lib/splitAtLast';
 
-function splitAtLastAt(str: string): [string, string] {
-  const idx = str.lastIndexOf('@');
-  if (idx === -1) {
-    return [str, ''];
-  }
-  return [str.slice(0, idx), str.slice(idx + 1)];
-}
+
 
 export const GET: RequestHandler = async ({ url }) => {
   //validation
@@ -16,11 +11,11 @@ export const GET: RequestHandler = async ({ url }) => {
   if (!userParam) {
     throw error(400, 'Missing query parameter');
   }
-  console.log(`Getting user: ${userParam}`)
+  console.log(`Getting user comment votes: ${userParam}`)
 
-  const [name, instanceDomain] = splitAtLastAt(userParam);
+  const [name, instanceDomain] = splitAtLast(userParam, '@');
 
-  const postLike = await db.person.findFirst({
+  const commentLike = await db.person.findFirst({
     where: {
       name:{
         equals: name, 
@@ -28,28 +23,27 @@ export const GET: RequestHandler = async ({ url }) => {
       },
       instance: { domain:{equals: instanceDomain, mode: 'insensitive'} }, 
     },
-    select: {
-      name: true, instance: true,
-      post_like: {
+    select: {   
+      comment_like: {
         select: {
           score: true,
           published: true,
-          post: { select: { ap_id: true } }
+          comment: { select: { ap_id: true } }
         },
         orderBy: { published: 'desc' }
       }
     }
   });
 
-  if (!postLike) {
+  if (!commentLike) {
     throw error(404, `No such user: ${name}@${instanceDomain}`);
   }
 
   return json({
-    votes: postLike.post_like.map(({ score, published, post }) => ({
+    votes: commentLike.comment_like.map(({ score, published, comment }) => ({
       score,
       published,
-      ap_id: post.ap_id
-    })), name: postLike.name, instance: postLike.instance
+      ap_id: comment.ap_id
+    }))
   });
 };
