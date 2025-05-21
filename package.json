@@ -43,7 +43,6 @@
 	},
 	"dependencies": {
 		"@prisma/client": "^6.8.2",
-		"corepack": "^0.32.0",
 		"dayjs": "^1.11.13",
 		"lucide-svelte": "^0.488.0",
 		"prisma": "^6.8.2"
