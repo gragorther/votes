@@ -5,27 +5,42 @@
 	import Upvote from '$lib/components/Upvote.svelte';
 	import Time from '$lib/components/Time.svelte';
 	import { sortByPublished } from '$lib/sortByPublished.ts';
-	let { data } = $props();
-	const username = data.username;
-	const postVotes = data.postVotes.votes; // The user's votes
-	const commentVotes = data.commentVotes.votes;
-	const allVotes = postVotes.concat(commentVotes);
+	import Loading from '$lib/components/Loading.svelte';
+
+	export let data: {
+		postVotes: Promise<any>;
+		commentVotes: Promise<any>;
+		username: string;
+		voteCount: Promise<any>;
+	};
+	console.log(data.voteCount);
 </script>
 
-<p>List of votes for {username}</p>
-<p>Total votes: {allVotes.length}</p>
+<p>List of votes for {data.username}</p>
+{#await data.voteCount then result}
+	<p>Total Votes: {result.voteCount}</p>
+{:catch error}
+	<p>Error loading vote count: {error.message}</p>
+{/await}
 
-<svelte:head><title>Lemvotes - {username}</title></svelte:head>
-<LikesList>
-	{#each sortByPublished([...allVotes]) as like}
-		<Like>
-			<a href={like.ap_id}>{like.ap_id}</a>
-			{#if like.score === -1}
-				<Downvote />
-			{:else}
-				<Upvote />
-			{/if}
-			at <Time time={like.published} />
-		</Like>
-	{/each}
-</LikesList>
+<svelte:head><title>Lemvotes - {data.username}</title></svelte:head>
+
+{#await Promise.all([data.commentVotes, data.postVotes])}
+	<Loading />
+{:then [commentVotes, postVotes]}
+	<LikesList>
+		{#each sortByPublished([...commentVotes.votes, ...postVotes.votes]) as like}
+			<Like>
+				<a href={like.ap_id}>{like.ap_id}</a>
+				{#if like.score === -1}
+					<Downvote />
+				{:else}
+					<Upvote />
+				{/if}
+				at <Time time={like.published} />
+			</Like>
+		{/each}
+	</LikesList>
+{:catch error}
+	<p>Error loading votes: {error.message}</p>
+{/await}

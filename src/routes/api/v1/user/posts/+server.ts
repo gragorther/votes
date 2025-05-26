@@ -1,7 +1,7 @@
 // src/routes/api/post-votes/+server.ts
 import { error, json } from '@sveltejs/kit';
 import { getUserVotes } from '$lib/getUserVotes';
-import type { RequestHandler } from '../$types';
+import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
 	const userParam = url.searchParams.get('q');

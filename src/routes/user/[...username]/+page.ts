@@ -1,17 +1,26 @@
-import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ fetch, params }) => {
+	const postVotesPromise = fetch(`/api/v1/user/posts?q=${params.username}`).then((res) => {
+		if (!res.ok) throw new Error('Failed to fetch post votes');
+		return res.json();
+	});
 
-  const resPosts = await fetch(`/api/v1/user/posts?q=${params.username}`);
-  const resComments = await fetch(`/api/v1/user/comments?q=${params.username}`)
+	const commentVotesPromise = fetch(`/api/v1/user/comments?q=${params.username}`).then((res) => {
+		if (!res.ok) throw new Error('Failed to fetch comment votes');
+		return res.json();
+	});
 
-  if (!resPosts.ok || !resComments.ok) {
-    throw error(404, 'User not found');
-  }
+	const voteCountPromise = fetch(`/api/v1/user/voteCount?q=${params.username}`).then((res) => {
+		if (!res.ok) throw new Error('Failed to fetch total vote count');
 
-  const userPostVotes = await resPosts.json();
-  const userCommentVotes = await resComments.json()
+		return res.json();
+	});
 
-  return { postVotes: userPostVotes,commentVotes: userCommentVotes, username: params.username.toLowerCase() };
+	return {
+		postVotes: postVotesPromise,
+		commentVotes: commentVotesPromise,
+		username: params.username.toLowerCase(),
+		voteCount: voteCountPromise
+	};
 };
