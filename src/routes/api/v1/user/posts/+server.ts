@@ -1,49 +1,19 @@
+// src/routes/api/post-votes/+server.ts
 import { error, json } from '@sveltejs/kit';
-import {db} from '$lib/db';
+import { getUserVotes } from '$lib/getUserVotes';
 import type { RequestHandler } from '../$types';
-import { splitAtLast } from '$lib/splitAtLast';
-
-
 
 export const GET: RequestHandler = async ({ url }) => {
-  //validation
-  const userParam = url.searchParams.get('q');
-  if (!userParam) {
-    throw error(400, 'Missing query parameter');
-  }
-  console.log(`Getting user post votes: ${userParam}`)
+	const userParam = url.searchParams.get('q');
+	if (!userParam) {
+		throw error(400, 'Missing query parameter');
+	}
 
-  const [name, instanceDomain] = splitAtLast(userParam, '@');
+	const votes = await getUserVotes(userParam, 'post_like', 'post');
 
-  const postLike = await db.person.findFirst({
-    where: {
-      name:{
-        equals: name, 
-        mode: 'insensitive'
-      },
-      instance: { domain:{equals: instanceDomain, mode: 'insensitive'} }, 
-    },
-    select: {
-      post_like: {
-        select: {
-          score: true,
-          published: true,
-          post: { select: { ap_id: true } }
-        },
-        orderBy: { published: 'desc' }
-      }
-    }
-  });
+	if (!votes) {
+		throw error(404, `No such user: ${userParam}`);
+	}
 
-  if (!postLike) {
-    throw error(404, `No such user: ${name}@${instanceDomain}`);
-  }
-
-  return json({
-    votes: postLike.post_like.map(({ score, published, post }) => ({
-      score,
-      published,
-      ap_id: post.ap_id
-    }))
-  });
+	return json({ votes });
 };
