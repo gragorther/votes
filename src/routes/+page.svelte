@@ -53,25 +53,17 @@
 					required
 				/>
 				<fieldset class="flex flex-row justify-center gap-2">
-					<input
-						type="radio"
-						id="post"
-						name="submit-type"
-						value="post"
-						checked
-						bind:group={query_type}
-					/>
-					<label for="post">Post</label>
-					<input
-						type="radio"
-						id="comment"
-						name="submit-type"
-						value="comment"
-						bind:group={query_type}
-					/>
-					<label for="comment">Comment</label>
-					<input type="radio" id="user" name="submit-type" value="user" bind:group={query_type} />
-					<label for="user">User</label>
+					{#each ['post', 'comment', 'user'] as type}
+						<input
+							type="radio"
+							id={type}
+							name="submit-type"
+							value={type}
+							bind:group={query_type}
+							checked={type === 'post'}
+						/>
+						<label for={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</label>
+					{/each}
 				</fieldset>
 				<span>
 					<button
