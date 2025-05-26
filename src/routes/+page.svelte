@@ -27,6 +27,8 @@
 	}
 </script>
 
+<svelte:head><title>Lemvotes</title></svelte:head>
+
 <div class=" mt-6 flex items-center justify-center">
 	<div
 		class="w-full max-w-md content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
