@@ -30,10 +30,10 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	if (!person) throw error(404, `User not found: ${userParam}`);
 
-	const [postLikesCount, commentLikesCount] = await Promise.all([
+	const [postVotesCount, commentVotesCount] = await Promise.all([
 		db.post_like.count({ where: { person_id: person.id } }),
 		db.comment_like.count({ where: { person_id: person.id } })
 	]);
 
-	return json({ voteCount: postLikesCount + commentLikesCount });
+	return json({ voteCount: postVotesCount + commentVotesCount });
 };

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import LikesList from '$lib/components/LikesList.svelte';
-	import Like from '$lib/components/Like.svelte';
+	import VotesList from '$lib/components/VotesList.svelte';
+	import Vote from '$lib/components/Vote.svelte';
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Upvote from '$lib/components/Upvote.svelte';
 	import Time from '$lib/components/Time.svelte';
@@ -23,24 +23,24 @@
 	<p>Error loading vote count: {error.message}</p>
 {/await}
 
-<svelte:head><title>Lemvotes - {data.username}</title></svelte:head>
+<svelte:head><title>{data.username} - Lemvotes</title></svelte:head>
 
 {#await Promise.all([data.commentVotes, data.postVotes])}
 	<Loading />
 {:then [commentVotes, postVotes]}
-	<LikesList>
-		{#each sortByPublished([...commentVotes.votes, ...postVotes.votes]) as like}
-			<Like>
-				<a href={like.ap_id}>{like.ap_id}</a>
-				{#if like.score === -1}
+	<VotesList>
+		{#each sortByPublished([...commentVotes.votes, ...postVotes.votes]) as vote}
+			<Vote>
+				<a href={vote.ap_id}>{vote.ap_id}</a>
+				{#if vote.score === -1}
 					<Downvote />
 				{:else}
 					<Upvote />
 				{/if}
-				at <Time time={like.published} />
-			</Like>
+				at <Time time={vote.published} />
+			</Vote>
 		{/each}
-	</LikesList>
+	</VotesList>
 {:catch error}
 	<p>Error loading votes: {error.message}</p>
 {/await}

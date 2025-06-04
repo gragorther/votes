@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { Loader } from 'lucide-svelte';
 	let query: string = $state('');
-	let query_type = $state('post');
+	let query_type: 'post' | 'comment' | 'user' = $state('post');
 
 	let input_placeholder = $derived.by(() => {
 		//sets the input placeholder when query_type changes
@@ -33,7 +32,22 @@
 	<div
 		class="w-full max-w-md content-center justify-center overflow-auto rounded-2xl border-2 border-pink-400 p-4"
 	>
-		<p>Use the following form to get votes</p>
+		<p
+			class="{query_type == 'comment' || query_type == 'post'
+				? 'text-justify'
+				: 'text-center'} h-30"
+		>
+			Use the following form to get votes{#if query_type == 'comment' || query_type == 'post'}
+				, make sure the {query_type} URL is from the {query_type}er's instance. You can do in the
+				official Lemmy UI by clicking on the
+				<img
+					class="inline h-6 w-auto"
+					src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Fediverse_logo_proposal.svg/1024px-Fediverse_logo_proposal.svg.png"
+					alt="fediverse logo"
+				/>
+				icon. The {query_type} URL can be from any fediverse software, not just Lemmy.
+			{/if}
+		</p>
 		<form
 			class="mt-2 flex flex-col flex-wrap justify-center select-none"
 			action={redirectUrl}
@@ -54,17 +68,25 @@
 					}}
 					required
 				/>
-				<fieldset class="flex flex-row justify-center gap-2">
+				<fieldset class="my-1 flex flex-row items-center justify-center gap-2">
 					{#each ['post', 'comment', 'user'] as type}
-						<input
-							type="radio"
-							id={type}
-							name="submit-type"
-							value={type}
-							bind:group={query_type}
-							checked={type === 'post'}
-						/>
-						<label for={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</label>
+						<div>
+							<input
+								type="radio"
+								id={type}
+								name="submit-type"
+								value={type}
+								bind:group={query_type}
+								checked={type === 'post'}
+								class="peer sr-only"
+							/>
+							<label
+								for={type}
+								class="cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-gray-300 transition-all duration-300 ease-in-out peer-checked:bg-blue-600 peer-checked:text-white"
+							>
+								{type.charAt(0).toUpperCase() + type.slice(1)}
+							</label>
+						</div>
 					{/each}
 				</fieldset>
 				<span>
