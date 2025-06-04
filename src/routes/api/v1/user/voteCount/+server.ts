@@ -27,13 +27,42 @@ export const GET: RequestHandler = async ({ url }) => {
 			id: true
 		}
 	});
+	if (!person) {
+		throw error(404, 'User not found');
+	}
 
-	if (!person) throw error(404, `User not found: ${userParam}`);
+	// downvotes
+	const downvotedPosts = await db.post_like.count({
+		where: {
+			person_id: person.id,
+			score: -1
+		}
+	});
 
-	const [postVotesCount, commentVotesCount] = await Promise.all([
-		db.post_like.count({ where: { person_id: person.id } }),
-		db.comment_like.count({ where: { person_id: person.id } })
-	]);
+	//upvotes
+	const upvotedPosts = await db.post_like.count({
+		where: {
+			person_id: person.id,
+			score: 1
+		}
+	});
 
-	return json({ voteCount: postVotesCount + commentVotesCount });
+	const downvotedComments = await db.comment_like.count({
+		where: {
+			person_id: person.id,
+			score: -1
+		}
+	});
+
+	const upvotedComments = await db.comment_like.count({
+		where: {
+			person_id: person.id,
+			score: 1
+		}
+	});
+
+	return json({
+		posts: { upvotes: upvotedPosts, downvotes: downvotedPosts },
+		comments: { upvotes: upvotedComments, downvotes: downvotedComments }
+	});
 };

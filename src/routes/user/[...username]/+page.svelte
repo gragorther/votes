@@ -16,9 +16,12 @@
 	console.log(data.voteCount);
 </script>
 
-<p>List of votes for {data.username}</p>
+<p class="font-bold">List of votes for {data.username}:</p>
 {#await data.voteCount then result}
-	<p>Total Votes: {result.voteCount}</p>
+	<p>Total post upvotes: {result.posts.upvotes}</p>
+	<p>Total post downvotes: {result.posts.downvotes}</p>
+	<p>Total comment upvotes: {result.comments.upvotes}</p>
+	<p>Total comment downvotes: {result.comments.downvotes}</p>
 {:catch error}
 	<p>Error loading vote count: {error.message}</p>
 {/await}

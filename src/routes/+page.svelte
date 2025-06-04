@@ -94,10 +94,10 @@
 					class="cursor-pointer self-center rounded {buttonColor} px-4 py-2 text-white"
 				>
 					Get Votes
+					{#if loading}
+						<Loader class="inline animate-spin" />
+					{/if}
 				</button>
-				{#if loading}
-					<Loader class="inline animate-spin" />
-				{/if}
 			</fieldset>
 		</form>
 	</div>
