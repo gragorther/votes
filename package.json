@@ -42,6 +42,7 @@
 		]
 	},
 	"dependencies": {
+		"@icons-pack/svelte-simple-icons": "^5.0.0",
 		"@prisma/client": "^6.8.2",
 		"dayjs": "^1.11.13",
 		"lucide-svelte": "^0.488.0",
