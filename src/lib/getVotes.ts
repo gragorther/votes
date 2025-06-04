@@ -1,4 +1,5 @@
 import { db } from '$lib/db';
+import { error } from '@sveltejs/kit';
 
 type TableName = 'comment' | 'post';
 
@@ -23,5 +24,8 @@ export async function getVotes(tableName: TableName, apId: string) {
 			}
 		}
 	});
+	if (!response) {
+		throw error(404, 'post not found');
+	}
 	return response[relatedField];
 }

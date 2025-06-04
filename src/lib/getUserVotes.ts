@@ -1,5 +1,6 @@
 import { db } from '$lib/db';
 import { splitAtLast } from '$lib/splitAtLast';
+import { error } from '@sveltejs/kit';
 
 type VoteType = 'comment_like' | 'post_like';
 type RelatedField = 'comment' | 'post';
@@ -43,7 +44,7 @@ export async function getUserVotes(
 	});
 
 	if (!user) {
-		return null;
+		return error(404, 'user not found');
 	}
 
 	return user[voteType].map((vote) => ({
