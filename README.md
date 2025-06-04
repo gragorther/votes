@@ -6,7 +6,7 @@ The entire app is written in SvelteKit.
 
 ## Development
 
-I use [pnpm](https://pnpm.io/) as the package manager for Lemvotes. Run `pnpm i` to install the dependencies, `pnpm update` to update them if necessary and `pnpm dev` to start the dev server. For development you would also need a Lemmy database to test with, which I will not provide a download to for security reasons. You can spin up your own dev Lemmy instance.
+I use [pnpm](https://pnpm.io/) as the package manager for Lemvotes. Run `pnpm i` to install the dependencies, `pnpm update` to update them if necessary and `pnpm dev` to start the dev server. This project uses NodeJS v24. For development you would also need a Lemmy database to test with, which I will not provide a download to for security reasons. You can spin up your own dev Lemmy instance.
 
 ## Self-hosting
 
@@ -33,7 +33,7 @@ services:
       - traefik.http.services.votes.loadbalancer.server.port=3000
       - traefik.http.routers.https-votes.tls.certResolver=le-ssl
     environment:
-       - DATABASE_URL=postgresql://user:password@postgres:5432/lemmy?connect_timeout=3000 #make sure to set your own credentials
+      - DATABASE_URL=postgresql://user:password@postgres:5432/lemmy?connect_timeout=3000 #make sure to set your own credentials
     networks:
       - database
       - default
@@ -43,7 +43,6 @@ networks:
     name: traefik_access
     external: true
   database:
-
 ```
 
 Make sure to set your own credentials in the `DATABASE_URL` env var and set your own domain in the Traefik labels. You will also need a working Traefik setup. If you don't use Traefik, use your reverse proxy's respective configuration and remove the labels from this compose file.
