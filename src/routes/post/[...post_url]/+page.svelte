@@ -1,6 +1,6 @@
 <script lang="ts">
-	import LikesList from '$lib/components/LikesList.svelte';
-	import Like from '$lib/components/Like.svelte';
+	import VotesList from '$lib/components/VotesList.svelte';
+	import Vote from '$lib/components/Vote.svelte';
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Upvote from '$lib/components/Upvote.svelte';
 	import Time from '$lib/components/Time.svelte';
@@ -10,21 +10,21 @@
 	const post_url = data.post_url;
 </script>
 
-<p>List of votes for <a href={post_url}>{post_url}</a></p>
-<svelte:head><title>Lemvotes - {post_url}</title></svelte:head>
-<LikesList>
-	{#each sortByPublished([...posts.likes]) as like}
-		<Like>
-			<a href="https://{like.person.instance.domain}/u/{like.person.name}"
-				>{like.person.name}@{like.person.instance.domain}</a
+<p>List of votes for <a href="https://{post_url}">{post_url}</a></p>
+<svelte:head><title>{post_url} - Lemvotes</title></svelte:head>
+<VotesList>
+	{#each sortByPublished([...posts.votes]) as vote}
+		<Vote>
+			<a href="https://{vote.person.instance.domain}/u/{vote.person.name}"
+				>{vote.person.name}@{vote.person.instance.domain}</a
 			>
 
-			{#if like.score === -1}
+			{#if vote.score === -1}
 				<Downvote />
 			{:else}
 				<Upvote />
 			{/if}
-			at <Time time={like.published} />
-		</Like>
+			at <Time time={vote.published} />
+		</Vote>
 	{/each}
-</LikesList>
+</VotesList>
