@@ -35,11 +35,11 @@
 		<p
 			class="{query_type == 'comment' || query_type == 'post'
 				? 'text-justify'
-				: 'text-center'} h-30"
+				: 'text-center'} md:h-29"
 		>
 			Use the following form to get votes{#if query_type == 'comment' || query_type == 'post'}
-				, make sure the {query_type} URL is from the {query_type}er's instance. You can do in the
-				official Lemmy UI by clicking on the
+				, make sure the {query_type} URL is from the {query_type}er's instance. You can do that in
+				the official Lemmy UI by clicking on the
 				<img
 					class="inline h-6 w-auto"
 					src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Fediverse_logo_proposal.svg/1024px-Fediverse_logo_proposal.svg.png"
@@ -89,17 +89,15 @@
 						</div>
 					{/each}
 				</fieldset>
-				<span>
-					<button
-						type="submit"
-						class="cursor-pointer self-center rounded {buttonColor} px-4 py-2 text-white"
-					>
-						Get Votes
-					</button>
-					{#if loading}
-						<Loader class="inline animate-spin" />
-					{/if}
-				</span>
+				<button
+					type="submit"
+					class="cursor-pointer self-center rounded {buttonColor} px-4 py-2 text-white"
+				>
+					Get Votes
+				</button>
+				{#if loading}
+					<Loader class="inline animate-spin" />
+				{/if}
 			</fieldset>
 		</form>
 	</div>
