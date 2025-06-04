@@ -7,7 +7,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	const userParam = url.searchParams.get('q');
 
 	if (!userParam) throw error(400, 'Missing “q” query param');
-	console.log(`Getting vote count for: ${userParam}`);
+	console.log(`Getting total vote count for: ${userParam}`);
 	const [name, instanceDomain] = splitAtLast(userParam, '@');
 
 	const person = await db.person.findFirst({
