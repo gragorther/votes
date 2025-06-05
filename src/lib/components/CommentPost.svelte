@@ -11,7 +11,7 @@
 <p>List of votes for <a href="https://{url}">https://{url}</a></p>
 <svelte:head><title>{url} - Lemvotes</title></svelte:head>
 <VotesList>
-	{#each sortVotes([...voteArray]) as vote}
+	{#each sortVotes([...voteArray], { downvotesFirst: true }) as vote}
 		<Vote>
 			<a href="https://{vote.person.instance.domain}/u/{vote.person.name}"
 				>{vote.person.name}@{vote.person.instance.domain}</a
