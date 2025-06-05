@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { SiGithub } from '@icons-pack/svelte-simple-icons';
-	import { HandCoins, Loader } from 'lucide-svelte';
+	import { CircleDollarSign, Loader } from 'lucide-svelte';
 	let query: string = $state('');
 	let query_type: 'post' | 'comment' | 'user' = $state('post');
 
@@ -103,7 +103,7 @@
 		</form>
 		<div class="float-right flex flex-row gap-3.5">
 			<a href="https://github.com/sponsors/gragorther" class="text-green-400 hover:text-green-200">
-				<HandCoins />
+				<CircleDollarSign />
 			</a>
 			<a href="https://github.com/gragorther/votes" class="text-white hover:text-blue-300">
 				<SiGithub />
