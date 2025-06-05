@@ -7,12 +7,16 @@
 	import { sortByPublished } from '$lib/sortByPublished.ts';
 	import Loading from '$lib/components/Loading.svelte';
 
-	export let data: {
+	interface Props {
+		data: {
 		postVotes: Promise<any>;
 		commentVotes: Promise<any>;
 		username: string;
 		voteCount: Promise<any>;
 	};
+	}
+
+	let { data }: Props = $props();
 	console.log(data.voteCount);
 </script>
 
