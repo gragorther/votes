@@ -16,24 +16,24 @@
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.9",
-		"@eslint/js": "^9.27.0",
+		"@eslint/js": "^9.28.0",
 		"@sveltejs/adapter-auto": "^6.0.1",
 		"@sveltejs/adapter-node": "^5.2.12",
-		"@sveltejs/kit": "^2.21.1",
-		"@sveltejs/vite-plugin-svelte": "^5.0.3",
-		"@tailwindcss/vite": "^4.1.7",
-		"eslint": "^9.27.0",
+		"@sveltejs/kit": "^2.21.2",
+		"@sveltejs/vite-plugin-svelte": "^5.1.0",
+		"@tailwindcss/vite": "^4.1.8",
+		"eslint": "^9.28.0",
 		"eslint-config-prettier": "^10.1.5",
-		"eslint-plugin-svelte": "^3.8.1",
-		"globals": "^16.1.0",
+		"eslint-plugin-svelte": "^3.9.1",
+		"globals": "^16.2.0",
 		"prettier": "^3.5.3",
 		"prettier-plugin-svelte": "^3.4.0",
-		"prettier-plugin-tailwindcss": "^0.6.11",
-		"svelte": "^5.30.2",
+		"prettier-plugin-tailwindcss": "^0.6.12",
+		"svelte": "^5.33.14",
 		"svelte-check": "^4.2.1",
-		"tailwindcss": "^4.1.7",
+		"tailwindcss": "^4.1.8",
 		"typescript": "^5.8.3",
-		"typescript-eslint": "^8.32.1",
+		"typescript-eslint": "^8.33.1",
 		"vite": "^6.3.5"
 	},
 	"npm": {
@@ -43,9 +43,9 @@
 	},
 	"dependencies": {
 		"@icons-pack/svelte-simple-icons": "^5.0.0",
-		"@prisma/client": "^6.8.2",
+		"@prisma/client": "^6.9.0",
 		"dayjs": "^1.11.13",
 		"lucide-svelte": "^0.488.0",
-		"prisma": "^6.8.2"
+		"prisma": "^6.9.0"
 	}
 }
