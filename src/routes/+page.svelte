@@ -36,7 +36,7 @@
 		<p
 			class="{query_type == 'comment' || query_type == 'post'
 				? 'text-justify'
-				: 'text-center'} md:h-29"
+				: 'text-center'} h-40 md:h-29"
 		>
 			Use the following form to get votes{#if query_type == 'comment' || query_type == 'post'}
 				, make sure the {query_type} URL is from the {query_type}er's instance. You can do that in
