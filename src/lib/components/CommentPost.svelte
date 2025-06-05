@@ -8,7 +8,7 @@
 	let { voteArray, url } = $props();
 </script>
 
-<p>List of votes for <a href="https://{url}">{url}</a></p>
+<p>List of votes for <a href="https://{url}">https://{url}</a></p>
 <svelte:head><title>{url} - Lemvotes</title></svelte:head>
 <VotesList>
 	{#each sortVotes([...voteArray]) as vote}
