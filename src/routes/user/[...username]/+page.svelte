@@ -4,16 +4,16 @@
 	import Downvote from '$lib/components/Downvote.svelte';
 	import Upvote from '$lib/components/Upvote.svelte';
 	import Time from '$lib/components/Time.svelte';
-	import { sortByPublished } from '$lib/sortByPublished.ts';
+	import { sortVotes } from '$lib/sortVotes';
 	import Loading from '$lib/components/Loading.svelte';
 
 	interface Props {
 		data: {
-		postVotes: Promise<any>;
-		commentVotes: Promise<any>;
-		username: string;
-		voteCount: Promise<any>;
-	};
+			postVotes: Promise<any>;
+			commentVotes: Promise<any>;
+			username: string;
+			voteCount: Promise<any>;
+		};
 	}
 
 	let { data }: Props = $props();
@@ -36,7 +36,7 @@
 	<Loading />
 {:then [commentVotes, postVotes]}
 	<VotesList>
-		{#each sortByPublished([...commentVotes.votes, ...postVotes.votes]) as vote}
+		{#each sortVotes([...commentVotes.votes, ...postVotes.votes]) as vote}
 			<Vote>
 				<a href={vote.ap_id}>{vote.ap_id}</a>
 				{#if vote.score === -1}
