@@ -18,6 +18,7 @@
 
 	let { data }: Props = $props();
 	console.log(data.voteCount);
+	let downvotesFirst = $state(true);
 </script>
 
 <p class="font-bold">List of votes for {data.username}:</p>
@@ -31,12 +32,21 @@
 {/await}
 
 <svelte:head><title>{data.username} - Lemvotes</title></svelte:head>
+<div class="flex justify-center gap-1 p-2">
+	<input
+		id="downvotesFirst"
+		type="checkbox"
+		class="size-4 self-center"
+		bind:checked={downvotesFirst}
+	/>
+	<label for="downvotesFirst" class="text-xl text-white select-none">Downvotes first</label>
+</div>
 
 {#await Promise.all([data.commentVotes, data.postVotes])}
 	<Loading />
 {:then [commentVotes, postVotes]}
 	<VotesList>
-		{#each sortVotes([...commentVotes.votes, ...postVotes.votes]) as vote}
+		{#each sortVotes( [...commentVotes.votes, ...postVotes.votes], { downvotesFirst: downvotesFirst } ) as vote}
 			<Vote>
 				<a href={vote.ap_id}>{vote.ap_id}</a>
 				{#if vote.score === -1}
