@@ -69,7 +69,7 @@
 					}}
 					required
 				/>
-				<fieldset class="my-1 flex flex-row items-center justify-center gap-2">
+				<fieldset class="my-1 flex items-center justify-center gap-2">
 					{#each ['post', 'comment', 'user'] as type}
 						<div>
 							<input
@@ -83,7 +83,7 @@
 							/>
 							<label
 								for={type}
-								class="cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-gray-300 transition-all duration-300 ease-in-out peer-checked:bg-blue-600 peer-checked:text-white"
+								class="cursor-pointer rounded-full bg-slate-800 px-4 py-2 text-sm font-medium text-gray-300 transition-all duration-300 ease-in-out peer-checked:bg-blue-600 peer-checked:text-white"
 							>
 								{type.charAt(0).toUpperCase() + type.slice(1)}
 							</label>
