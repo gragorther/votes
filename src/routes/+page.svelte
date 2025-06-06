@@ -27,7 +27,7 @@
 	}
 </script>
 
-<svelte:head><title>Lemvotes</title></svelte:head>
+<svelte:head><title>Lemvotes - list the votes of anything on the Fediverse</title></svelte:head>
 
 <div class=" mt-6 flex items-center justify-center">
 	<div
