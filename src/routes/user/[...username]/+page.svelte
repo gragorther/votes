@@ -19,6 +19,7 @@
 	let { data }: Props = $props();
 	console.log(data.voteCount);
 	let downvotesFirst = $state(true);
+	let descending = $state(true);
 </script>
 
 <p class="font-bold">List of votes for {data.username}:</p>
@@ -41,12 +42,16 @@
 	/>
 	<label for="downvotesFirst" class="text-xl text-white select-none">Downvotes first</label>
 </div>
+<div class="flex justify-center gap-1 p-2">
+	<input id="descending" type="checkbox" class="size-4 self-center" bind:checked={descending} />
+	<label for="descending" class="text-xl text-white select-none">Descending</label>
+</div>
 
 {#await Promise.all([data.commentVotes, data.postVotes])}
 	<Loading />
 {:then [commentVotes, postVotes]}
 	<VotesList>
-		{#each sortVotes( [...commentVotes.votes, ...postVotes.votes], { downvotesFirst: downvotesFirst } ) as vote}
+		{#each sortVotes( [...commentVotes.votes, ...postVotes.votes], { downvotesFirst: downvotesFirst, descending: descending } ) as vote}
 			<Vote>
 				<a href={vote.ap_id}>{vote.ap_id}</a>
 				{#if vote.score === -1}
