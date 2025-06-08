@@ -1,4 +1,4 @@
-import { createFederation } from '@fedify/fedify';
+import { createFederation, Dislike, Like, Undo } from '@fedify/fedify';
 import { fedifyHook } from '@fedify/fedify/x/sveltekit';
 import { RedisKvStore, RedisMessageQueue } from '@fedify/redis';
 import Redis from 'ioredis';
@@ -7,6 +7,18 @@ const federation = createFederation<string>({
 	kv: new RedisKvStore(redis),
 	queue: new RedisMessageQueue(() => new Redis())
 });
+
+federation
+	.setInboxListeners('/users/{identifier}/inbox', '/inbox')
+	.on(Like, async (ctx, like) => {
+		// TODO: extract actor and object, insert upvote to DB
+	})
+	.on(Dislike, async (ctx, dislike) => {
+		// TODO: handle downvote
+	})
+	.on(Undo, async (ctx, undo) => {
+		// TODO: handle vote removal
+	});
 
 // This is the entry point to the Fedify hook from the SvelteKit framework:
 export const handle = fedifyHook(federation, (req) => 'context data');
