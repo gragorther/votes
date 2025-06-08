@@ -42,9 +42,12 @@
 		]
 	},
 	"dependencies": {
+		"@fedify/fedify": "^1.6.1",
+		"@fedify/redis": "^0.4.0",
 		"@icons-pack/svelte-simple-icons": "^5.0.0",
 		"@prisma/client": "^6.9.0",
 		"dayjs": "^1.11.13",
+		"ioredis": "^5.6.1",
 		"lucide-svelte": "^0.488.0",
 		"prisma": "^6.9.0"
 	}
