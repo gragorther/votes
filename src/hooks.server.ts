@@ -2,6 +2,7 @@ import { createFederation, Dislike, Like, Undo } from '@fedify/fedify';
 import { fedifyHook } from '@fedify/fedify/x/sveltekit';
 import { RedisKvStore, RedisMessageQueue } from '@fedify/redis';
 import Redis from 'ioredis';
+
 const redis = new Redis(); // Configure as needed
 const federation = createFederation<string>({
 	kv: new RedisKvStore(redis),
@@ -12,6 +13,7 @@ federation
 	.setInboxListeners('/users/{identifier}/inbox', '/inbox')
 	.on(Like, async (ctx, like) => {
 		// TODO: extract actor and object, insert upvote to DB
+		console.log(like.getActor(ctx));
 	})
 	.on(Dislike, async (ctx, dislike) => {
 		// TODO: handle downvote
