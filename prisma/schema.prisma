@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "./.dev.db"
 }
 
 
@@ -16,7 +16,7 @@ enum LikeType {
 model User {
   Id Int @default(autoincrement()) @id
   Name String
-  Username String
+  Username String @unique
   likes Like[]
 }
 
