@@ -20,3 +20,4 @@ symlink-from
 .idea/
 build
 prisma/prismagenerated
+docker-compose.yml

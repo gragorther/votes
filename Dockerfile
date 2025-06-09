@@ -16,7 +16,6 @@ RUN pnpm fetch --prod
 COPY . /app
 
 RUN pnpm install --prod
-RUN pnpm prisma generate
 
 FROM prod AS build
 RUN pnpm install
