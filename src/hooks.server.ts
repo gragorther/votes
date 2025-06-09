@@ -26,9 +26,9 @@ federation.setInboxListeners('/users/{identifier}/inbox', '/inbox').on(Like, asy
 
 	const user = await db.user.upsert({
 		where: { Username: actorUri },
-		update: { Name: displayName },
+		update: { Name: displayName.toString() },
 		create: {
-			Name: displayName,
+			Name: displayName.toString(),
 			Username: actorUri
 		}
 	});
