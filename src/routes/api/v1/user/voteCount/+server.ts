@@ -2,6 +2,7 @@ import { error, json } from '@sveltejs/kit';
 import { db } from '$lib/db';
 import type { RequestHandler } from './$types';
 import { splitAtLast } from '$lib/splitAtLast';
+import { env } from '$env/dynamic/public';
 
 export const GET: RequestHandler = async ({ url }) => {
 	const userParam = url.searchParams.get('q');
@@ -9,6 +10,10 @@ export const GET: RequestHandler = async ({ url }) => {
 	if (!userParam) throw error(400, 'Missing “q” query param');
 	console.log(`Getting total vote count for: ${userParam}`);
 	const [name, instanceDomain] = splitAtLast(userParam, '@');
+
+	if (env.PUBLIC_EXCLUDED_INSTANCES.split(',').includes(instanceDomain)) {
+		throw error(401, "user's instance has been excluded from search results");
+	}
 
 	const person = await db.person.findFirst({
 		where: {
