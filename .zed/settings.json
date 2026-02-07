@@ -1,0 +1,11 @@
+{
+  "lsp": {
+    "expert": {
+      "settings": {
+        "workspaceSymbols": {
+          "minQueryLength": 0,
+        },
+      },
+    },
+  },
+}
