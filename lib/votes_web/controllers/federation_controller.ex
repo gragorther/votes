@@ -2,8 +2,10 @@ defmodule VotesWeb.FederationController do
   use VotesWeb, :controller
 
   def inbox(conn, %{"actor" => actor}) do
-    headers = Plug.Conn.get_req_header(conn, "signature")
+    [header] = Plug.Conn.get_req_header(conn, "signature")
+    header = Votes.Signatures.Signature.changeset(header)
 
-    render(conn, %{actor: actor, header: headers})
+    # test
+    render(conn, %{actor: actor, header: header.signature})
   end
 end
