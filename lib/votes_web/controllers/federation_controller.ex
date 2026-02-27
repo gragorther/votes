@@ -1,11 +1,9 @@
 defmodule VotesWeb.FederationController do
   use VotesWeb, :controller
+  alias Votes.Federation
 
-  def inbox(conn, %{"actor" => actor}) do
+  def inbox(conn, data) do
     [header] = Plug.Conn.get_req_header(conn, "signature")
-    header = Votes.Signatures.Signature.changeset(header)
-
-    # test
-    render(conn, %{actor: actor, header: header.signature})
+    Federation.handle_inbox(header, conn.req_headers, data)
   end
 end
