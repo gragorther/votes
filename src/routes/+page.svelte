@@ -43,7 +43,7 @@
 				the official Lemmy UI by clicking on the
 				<img
 					class="inline h-6 w-auto"
-					src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Fediverse_logo_proposal.svg/1024px-Fediverse_logo_proposal.svg.png"
+					src="https://upload.wikimedia.org/wikipedia/commons/9/93/Fediverse_logo_proposal.svg"
 					alt="fediverse logo"
 				/>
 				icon. The {query_type} URL can be from any fediverse software, not just Lemmy.
