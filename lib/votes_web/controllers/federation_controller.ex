@@ -3,7 +3,9 @@ defmodule VotesWeb.FederationController do
   alias Votes.Federation
 
   def inbox(conn, data) do
-    [header] = Plug.Conn.get_req_header(conn, "signature")
-    Federation.handle_inbox(header, conn.req_headers, data)
+    case Federation.inbox(Map.new(conn.req_headers), data) do
+      :ok -> Plug.Conn.put_status(conn, 200)
+      {:error, _} -> Plug.Conn.put_status(conn, 400)
+    end
   end
 end

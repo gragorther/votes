@@ -1,7 +1,7 @@
 defmodule Votes.Signatures.Signature do
   use Ecto.Schema
   import Ecto.Changeset
-
+  @primary_key false
   embedded_schema do
     field :key_id, :string
     field :headers, {:array, :string}
