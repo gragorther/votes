@@ -66,7 +66,8 @@ defmodule Votes.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
-      {:json_ld, ">= 1.0.0"}
+      {:json_ld, ">= 1.0.0"},
+      {:timex, "> 3.0.0"}
     ]
   end
 
