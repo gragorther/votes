@@ -30,7 +30,7 @@ defmodule Votes.Federation do
 
   # if a public key is supplied (used mainly for testing)
   def inbox(http_headers, public_key, signature \\ nil, data) do
-    signature =
+    signature_parsed =
       if signature == nil do
         {:ok, signature} = validate_signature(http_headers["signature"])
         signature
@@ -39,13 +39,13 @@ defmodule Votes.Federation do
       end
 
     if valid_time?(http_headers["date"]) do
-      handle_inbox(signature, http_headers, public_key, data)
+      handle_inbox(http_headers, public_key, signature_parsed, data)
     else
       {:error, :invalid_date}
     end
   end
 
-  defp handle_inbox(signature, http_headers, public_key, _data) do
+  defp handle_inbox(http_headers, public_key, signature, data) do
     # for case-insensitive lookups
     http_headers = for {k, v} <- http_headers, do: {String.downcase(k), v}, into: %{}
 
@@ -76,5 +76,17 @@ defmodule Votes.Federation do
     else
       {:error, :invalid_signature}
     end
+  end
+
+  defp create_object(%{
+         "type" => "Announce",
+         "actor" => announced_by,
+         "object" => %{
+           "id" => like_activitypub_id,
+           "actor" => liked_by,
+           "type" => "Like",
+           "object" => liked_post
+         }
+       }) do
   end
 end

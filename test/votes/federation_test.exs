@@ -24,7 +24,7 @@ defmodule Votes.FederationTest do
       ~s|keyId="https://my-example.com/actor#main-key",headers="(request-target) host date",signature="#{signed_string}"|
 
     {:ok, signature} = Federation.validate_signature(signature_header)
-    headers = %{"Host" => "gregtech.eu", "Date" => date, "Signature" => signature_header}
+    headers = %{"host" => "gregtech.eu", "date" => date, "signature" => signature_header}
   end
 
   describe "federation" do

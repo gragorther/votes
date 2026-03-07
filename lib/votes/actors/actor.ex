@@ -5,6 +5,7 @@ defmodule Votes.Actors.Actor do
   schema "actors" do
     field :ap_id, :string
     field :public_key, :string
+    field :username, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -12,7 +13,7 @@ defmodule Votes.Actors.Actor do
   @doc false
   def changeset(actor, attrs) do
     actor
-    |> cast(attrs, [:ap_id, :public_key])
+    |> cast(attrs, [:ap_id, :public_key, :username])
     |> validate_required([:ap_id, :public_key])
   end
 end
