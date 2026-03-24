@@ -6,11 +6,15 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :votes, Votes.Repo,
-  url: System.get_env("DATABASE_URL"),
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  port: 5432,
   database: "votes_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: System.schedulers_online() * 2
 
+config :votes, :public_key_req_options, plug: {Req.Test, VotesWeb.FederationController}
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :votes, VotesWeb.Endpoint,

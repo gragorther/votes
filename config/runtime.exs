@@ -117,3 +117,15 @@ if config_env() == :prod do
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 end
+
+# config/runtime.exs
+
+if config_env() in [:dev, :test] do
+  if url = System.get_env("DATABASE_URL") do
+    config :votes, Votes.Repo,
+      url: url,
+      pool: Ecto.Adapters.SQL.Sandbox,
+      show_sensitive_data_on_connection_error: true,
+      pool_size: 10
+  end
+end

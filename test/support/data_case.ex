@@ -29,6 +29,8 @@ defmodule Votes.DataCase do
 
   setup tags do
     Votes.DataCase.setup_sandbox(tags)
+
+    # {:ok, %{postgres: container}}
     :ok
   end
 
