@@ -38,8 +38,20 @@ defmodule VotesWeb.FederationControllerTest do
 
       # convert into kwlists because that's what conn has
       # Enum.reduce(headers(keypair, date), conn, fn {k, v}, acc -> Plug.Conn. end)
+      [exponent, n] = public_key
+      exponent = :binary.decode_unsigned(exponent)
+      n = :binary.decode_unsigned(n)
+      rsa_pub_record = {:RSAPublicKey, n, exponent}
 
-      conn = post(conn, ~p"/inbox")
+      encoded_public_key =
+        [:public_key.pem_entry_encode(:RSAPublicKey, rsa_pub_record)]
+        |> :public_key.pem_encode()
+
+      Req.Test.stub(VotesWeb.FederationController, fn conn ->
+        Req.Test.json(conn, %{"publicKey" => %{"publicKeyPem" => encoded_public_key}})
+      end)
+
+      assert post(conn, ~p"/inbox").status == 200
     end
   end
 end
