@@ -37,4 +37,16 @@ defmodule Votes.PostsFixtures do
 
     community
   end
+
+  def post_fixture(attrs \\ %{}) do
+    {:ok, post} =
+      attrs
+      |> Enum.into(%{
+        ap_id: "some ap_id",
+        title: "some title"
+      })
+      |> Votes.Posts.create_post()
+
+    post
+  end
 end
