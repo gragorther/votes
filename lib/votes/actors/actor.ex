@@ -6,6 +6,8 @@ defmodule Votes.Actors.Actor do
     field :ap_id, :string
     field :public_key, :string
     field :username, :string
+    has_many :posts, Votes.Posts.Post
+    has_many :votes, Votes.Posts.Vote
 
     timestamps(type: :utc_datetime)
   end

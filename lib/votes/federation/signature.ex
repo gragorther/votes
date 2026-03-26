@@ -1,4 +1,4 @@
-defmodule Votes.Signatures.Signature do
+defmodule Votes.Federation.Signature do
   use Ecto.Schema
   import Ecto.Changeset
   @primary_key false

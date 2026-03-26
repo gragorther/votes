@@ -1,6 +1,7 @@
 defmodule VotesWeb.FederationController do
   use VotesWeb, :controller
   alias Votes.Federation
+  alias Votes.Crypto
 
   def inbox(conn, _data) do
     http_headers = Map.new(conn.req_headers)
@@ -27,25 +28,11 @@ defmodule VotesWeb.FederationController do
 
         signature_decoded = Base.decode64!(signature_base64)
 
-        # I used :public_key instead of :crypto because for some reason the PEM decoders from :public_key return
-        # a different format than the one :crypto accepts
-        if :public_key.verify(comparison_string, :sha256, signature_decoded, public_key) do
+        if Crypto.verify(comparison_string, signature_decoded, public_key) do
           put_status(conn, 200)
         else
           put_status(conn, 401)
         end
-
-        # if :crypto.verify(
-        #      :rsa,
-        #      :sha256,
-        #      comparison_string,
-        #      signature_decoded,
-        #      public_key
-        #    ) do
-        #   put_status(conn, 200)
-        # else
-        #   put_status(conn, 401)
-        # end
       end
     end
   end

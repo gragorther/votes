@@ -11,5 +11,6 @@ defmodule Votes.Repo.Migrations.CreatePosts do
     end
 
     create index(:posts, [:actor_id])
+    create unique_index(:posts, [:ap_id])
   end
 end
