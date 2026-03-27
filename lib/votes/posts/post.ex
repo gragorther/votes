@@ -5,10 +5,11 @@ defmodule Votes.Posts.Post do
   schema "posts" do
     field :ap_id, :string
     field :title, :string
-    # field :actor_id, :id
+    # announced by
+    belongs_to :announced_by, Votes.Actors.Actor, foreign_key: :announced_by_actor_id
+    # posted by
     belongs_to :actor, Votes.Actors.Actor
-    belongs_to :community, Votes.Posts.Community
-    has_many :items, Votes.Posts.Vote
+    has_many :votes, Votes.Posts.Vote
 
     timestamps(type: :utc_datetime)
   end

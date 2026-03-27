@@ -9,6 +9,9 @@ defmodule Votes.Actors.Actor do
     has_many :posts, Votes.Posts.Post
     has_many :votes, Votes.Posts.Vote
 
+    # this is not the same as the :posts relationship
+    has_many :announcments, Votes.Posts.Post, foreign_key: :announced_by_actor_id
+
     timestamps(type: :utc_datetime)
   end
 
