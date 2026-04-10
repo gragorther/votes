@@ -3,15 +3,22 @@ defmodule Votes.PostsFixtures do
   This module defines test helpers for creating
   entities via the `Votes.Posts` context.
   """
+  def unique_vote_ap_id, do: "https://someserver.com/votes/#{System.unique_integer([:positive])}"
 
   @doc """
   Generate a vote.
   """
   def vote_fixture(attrs \\ %{}) do
+    post = post_fixture()
+    actor = Votes.ActorsFixtures.actor_fixture()
+
     {:ok, vote} =
       attrs
       |> Enum.into(%{
-        upvote: true
+        upvote: true,
+        ap_id: unique_vote_ap_id(),
+        post_id: post.id,
+        actor_id: actor.id
       })
       |> Votes.Posts.create_vote()
 
@@ -19,31 +26,19 @@ defmodule Votes.PostsFixtures do
   end
 
   @doc """
-  Generate a unique community ap_id.
+  Generate a unique post ap_id.
   """
-  def unique_community_ap_id, do: "some ap_id#{System.unique_integer([:positive])}"
-
-  @doc """
-  Generate a community.
-  """
-  def community_fixture(attrs \\ %{}) do
-    {:ok, community} =
-      attrs
-      |> Enum.into(%{
-        ap_id: unique_community_ap_id(),
-        name: "some name"
-      })
-      |> Votes.Posts.create_community()
-
-    community
-  end
+  def unique_post_ap_id, do: "https://someserver.com/#{System.unique_integer([:positive])}"
 
   def post_fixture(attrs \\ %{}) do
+    actor = Votes.ActorsFixtures.actor_fixture()
+
     {:ok, post} =
       attrs
       |> Enum.into(%{
-        ap_id: "some ap_id",
-        title: "some title"
+        title: "some title",
+        ap_id: unique_post_ap_id(),
+        actor_id: actor.id
       })
       |> Votes.Posts.create_post()
 

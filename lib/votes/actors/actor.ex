@@ -6,6 +6,7 @@ defmodule Votes.Actors.Actor do
     field :ap_id, :string
     field :public_key, :string
     field :username, :string
+    field :is_group, :boolean, default: false
     has_many :posts, Votes.Posts.Post
     has_many :votes, Votes.Posts.Vote
 
