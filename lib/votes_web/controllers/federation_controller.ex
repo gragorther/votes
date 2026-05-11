@@ -2,8 +2,9 @@ defmodule VotesWeb.FederationController do
   use VotesWeb, :controller
   alias Votes.Federation
   alias Votes.Crypto
+  alias Votes.Objects
 
-  def inbox(conn, _data) do
+  def inbox(conn, data) do
     http_headers = Map.new(conn.req_headers)
 
     with {:ok, signature} <- Federation.validate_signature(http_headers["signature"]),
@@ -29,7 +30,10 @@ defmodule VotesWeb.FederationController do
         signature_decoded = Base.decode64!(signature_base64)
 
         if Crypto.verify(comparison_string, signature_decoded, public_key) do
-          put_status(conn, 200)
+          case Objects.create_object(data) do
+            :ok -> put_status(conn, 200)
+            :error -> put_status(conn, 500)
+          end
         else
           put_status(conn, 401)
         end

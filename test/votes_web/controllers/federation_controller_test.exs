@@ -1,6 +1,8 @@
 defmodule VotesWeb.FederationControllerTest do
   use VotesWeb.ConnCase
   alias Votes.Crypto
+  import Votes.PostsFixtures
+  import Votes.ActorsFixtures
 
   defp current_time_in_rfc1124 do
     to_string(:httpd_util.rfc1123_date())
@@ -38,7 +40,19 @@ defmodule VotesWeb.FederationControllerTest do
         Req.Test.json(conn, %{"publicKey" => %{"publicKeyPem" => encoded_public_key}})
       end)
 
-      assert post(conn, ~p"/inbox").status == 200
+      post = post_fixture()
+      actor = actor_fixture()
+
+      assert post(conn, ~p"/inbox", %{
+               "type" => "Announce",
+               "actor" => unique_actor_ap_id(),
+               "object" => %{
+                 "id" => unique_vote_ap_id(),
+                 "actor" => actor.ap_id,
+                 "type" => "Like",
+                 "object" => post.ap_id
+               }
+             }).status == 200
     end
   end
 end

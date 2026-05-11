@@ -35,3 +35,7 @@ votes-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# Nix stuff
+.nix-mix/
+.nix-hex
+postgres/

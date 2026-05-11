@@ -5,6 +5,8 @@ defmodule Votes.ActorsFixtures do
   This module defines test helpers for creating
   entities via the `Votes.Actors` context.
   """
+  def unique_actor_ap_id,
+    do: "https://someserver.com/actors/#{System.unique_integer([:positive])}"
 
   @doc """
   Generate a actor.
