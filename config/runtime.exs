@@ -1,5 +1,5 @@
 import Config
-
+alias Votes.Crypto
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
 # system starts, so it is typically used to load production configuration
@@ -18,6 +18,16 @@ import Config
 # script that automatically sets the env var above.
 if System.get_env("PHX_SERVER") do
   config :votes, VotesWeb.Endpoint, server: true
+end
+
+private_key_env_var = System.get_env("PRIVATE_KEY")
+
+if private_key_env_var do
+  private_key = Crypto.decode_pem_key(System.get_env("PRIVATE_KEY"))
+
+  config :votes, :private_key, private_key
+  config :votes, :public_key, Crypto.public_key_from_private(private_key)
+  config :votes, :domain, System.get_env("DOMAIN")
 end
 
 if config_env() == :prod do

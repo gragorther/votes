@@ -33,3 +33,10 @@ defmodule Votes.Federation.Signature do
     |> validate_required([:key_id, :headers, :signature])
   end
 end
+
+defimpl String.Chars, for: Votes.Federation.Signature do
+  def to_string(signature) do
+    headers = Enum.join(signature.headers, " ")
+    ~s|keyId="#{signature.key_id}",headers="#{headers}",signature="#{signature.signature}"|
+  end
+end

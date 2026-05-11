@@ -3,13 +3,20 @@ defmodule Votes.Crypto do
     :public_key.generate_key({:rsa, 4096, 65537})
   end
 
-  def create_rsa_keypair do
-    # stolen from https://elixirforum.com/t/how-to-generate-rsa-public-key-using-crypto-provided-exponent-and-modulus/38487/5
+  def pem_encode_rsa_private_key(key) do
+    :public_key.pem_encode([:public_key.pem_entry_encode(:RSAPrivateKey, key)])
+  end
+
+  def public_key_from_private(private_key) do
     {:RSAPrivateKey, _, modulus, publicExponent, _, _, _, _exponent1, _, _, _otherPrimeInfos} =
-      rsa_private_key = create_rsa_private_key()
+      private_key
 
-    rsa_public_key = {:RSAPublicKey, modulus, publicExponent}
+    {:RSAPublicKey, modulus, publicExponent}
+  end
 
+  def create_rsa_keypair do
+    rsa_private_key = create_rsa_private_key()
+    rsa_public_key = public_key_from_private(rsa_private_key)
     {rsa_public_key, rsa_private_key}
   end
 
@@ -24,5 +31,10 @@ defmodule Votes.Crypto do
 
   def verify(msg, signature, key) do
     :public_key.verify(msg, :sha256, signature, key)
+  end
+
+  def decode_pem_key(pem) do
+    [public_key_pem_decoded] = :public_key.pem_decode(pem)
+    :public_key.pem_entry_decode(public_key_pem_decoded)
   end
 end

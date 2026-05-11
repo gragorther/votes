@@ -2,7 +2,6 @@ defmodule VotesWeb.FederationController do
   use VotesWeb, :controller
   alias Votes.Federation
   alias Votes.Crypto
-  alias Votes.Objects
 
   def inbox(conn, data) do
     http_headers = Map.new(conn.req_headers)
@@ -23,14 +22,14 @@ defmodule VotesWeb.FederationController do
           end)
           |> Enum.join("\n")
 
-        [public_key_pem_decoded] = :public_key.pem_decode(public_key)
-        public_key = :public_key.pem_entry_decode(public_key_pem_decoded)
         signature_base64 = signature.signature
 
         signature_decoded = Base.decode64!(signature_base64)
 
+        public_key = Crypto.decode_pem_key(public_key)
+
         if Crypto.verify(comparison_string, signature_decoded, public_key) do
-          case Objects.create_object(data) do
+          case Federation.handle_event(data) do
             :ok -> put_status(conn, 200)
             :error -> put_status(conn, 500)
           end
@@ -39,5 +38,9 @@ defmodule VotesWeb.FederationController do
         end
       end
     end
+  end
+
+  def account_page(conn, _) do
+    render(conn, :account_page)
   end
 end

@@ -28,7 +28,7 @@ let
     export PGDATA=$PGDIR/data
     export PGLOG=$PGDIR/log
     export DATABASE_URL="postgresql:///postgres?host=$PGDIR"
-
+    export PRIVATE_KEY=$(mix compile --no-all-warnings && mix eval --no-compile "IO.write Votes.Crypto.create_rsa_private_key() |> Votes.Crypto.pem_encode_rsa_private_key")
     if test ! -d $PGDIR; then
       mkdir $PGDIR
     fi

@@ -17,7 +17,7 @@ defmodule Votes.ActorsFixtures do
     {:ok, actor} =
       attrs
       |> Enum.into(%{
-        ap_id: "some ap_id",
+        ap_id: unique_actor_ap_id(),
         public_key: Crypto.pem_encode_rsa_public_key(public_key)
       })
       |> Votes.Actors.create_actor()

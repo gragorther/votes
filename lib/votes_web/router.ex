@@ -1,4 +1,5 @@
 defmodule VotesWeb.Router do
+  alias VotesWeb.FederationController
   use VotesWeb, :router
 
   pipeline :browser do
@@ -14,9 +15,10 @@ defmodule VotesWeb.Router do
     plug(:accepts, ["json"])
   end
 
-  scope "/", VotesWeb do
+  scope "/" do
     pipe_through(:api)
     post("/inbox", FederationController, :inbox)
+    get("/", FederationController, :account_page)
   end
 
   scope "/", VotesWeb do

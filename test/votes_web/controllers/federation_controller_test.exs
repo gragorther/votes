@@ -9,6 +9,12 @@ defmodule VotesWeb.FederationControllerTest do
   end
 
   defp headers({public_key, private_key}, date) do
+    # {:ok, signature} = Federation.validate_signature(signature_header)
+    signature_header = create_signature_header()
+    %{"host" => "gregtech.eu", "date" => date, "signature" => signature_header}
+  end
+
+  def create_signature_header() do
     to_be_signed_string =
       "(request-target): post /inbox\nhost: gregtech.eu\ndate: #{date}"
 
@@ -18,10 +24,6 @@ defmodule VotesWeb.FederationControllerTest do
     # add digest at some point
     signature_header =
       ~s|keyId="https://my-example.com/actor#main-key",headers="(request-target) host date",signature="#{signed_string}"|
-
-    # {:ok, signature} = Federation.validate_signature(signature_header)
-
-    %{"host" => "gregtech.eu", "date" => date, "signature" => signature_header}
   end
 
   describe "inbox" do
