@@ -8,9 +8,9 @@ defmodule Votes.Posts do
   alias Votes.Posts.Vote
   alias Votes.Posts.Post
 
-  def change_post(attrs) do
-    Post.changeset(%Post{}, attrs)
-  end
+  # def change_post(attrs) do
+  #   Post.changeset(%Post{}, attrs)
+  # end
 
   @doc """
   Returns the list of posts.

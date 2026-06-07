@@ -27,7 +27,7 @@ defmodule Votes.Follows do
     signature =
       %Signature{
         # get app url
-        key_id: url(~p"/"),
+        key_id: VotesWeb.base_url(),
         headers: Keyword.keys(headers) |> Enum.map(&to_string/1),
         signature: Crypto.sign(Application.get_env(:votes, :private_key), comparison_string)
       }
@@ -40,10 +40,10 @@ defmodule Votes.Follows do
 
     body = %{
       "@context" => "https://www.w3.org/ns/activitystreams",
-      "actor" => url(~p"/"),
+      "actor" => VotesWeb.base_url(),
       "object" => community,
       "type" => "Follow",
-      "id" => to_string(follow.id)
+      "id" => VotesWeb.base_url() <> "follows/#{follow.id}"
     }
 
     request = Req.new(method: :post, url: community, headers: headers, body: body)

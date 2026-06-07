@@ -17,6 +17,10 @@ defmodule VotesWeb do
   those modules here.
   """
 
+  def base_url() do
+    Application.get_env(:votes, :base_url)
+  end
+
   def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
 
   def router do

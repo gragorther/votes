@@ -27,7 +27,8 @@ if private_key_env_var do
 
   config :votes, :private_key, private_key
   config :votes, :public_key, Crypto.public_key_from_private(private_key)
-  config :votes, :domain, System.get_env("DOMAIN")
+  # config :votes, :domain, System.get_env("DOMAIN")
+  config :votes, :base_url, System.get_env("BASE_URL")
 end
 
 if config_env() == :prod do

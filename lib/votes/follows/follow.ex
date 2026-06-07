@@ -3,7 +3,7 @@ defmodule Votes.Follows.Follow do
   import Ecto.Changeset
 
   schema "follows" do
-    field :object, :string
+    belongs_to(:actor, Votes.Actors.Actor)
     field :accepted, :boolean, default: false
 
     timestamps(type: :utc_datetime)

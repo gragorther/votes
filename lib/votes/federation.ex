@@ -59,4 +59,7 @@ defmodule Votes.Federation do
       _ -> :error
     end
   end
+
+  def handle_event(%{"type" => "Accept"}) do
+  end
 end

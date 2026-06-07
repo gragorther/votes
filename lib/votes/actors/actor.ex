@@ -9,7 +9,7 @@ defmodule Votes.Actors.Actor do
     field :is_group, :boolean, default: false
     has_many :posts, Votes.Posts.Post
     has_many :votes, Votes.Posts.Vote
-
+    has_one :follow, Votes.Follows.Follow
     # this is not the same as the :posts relationship
     has_many :announcments, Votes.Posts.Post, foreign_key: :announced_by_actor_id
 

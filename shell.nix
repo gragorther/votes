@@ -33,6 +33,8 @@ let
       mkdir $PGDIR
     fi
 
+    export BASE_URL=http://localhost:4000/
+
    if [ ! -d $PGDATA ]; then
      echo 'Initializing postgresql database...'
      initdb $PGDATA --auth=trust >/dev/null
