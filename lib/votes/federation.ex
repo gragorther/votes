@@ -6,8 +6,6 @@ defmodule Votes.Federation do
   alias Votes.Repo
   alias Votes.Posts.Vote
   alias Votes.Posts.Post
-  use VotesWeb, :verified_routes
-  alias Votes.Crypto
 
   def change_signature(attrs) do
     Signature.changeset(%Signature{}, attrs)
@@ -25,28 +23,6 @@ defmodule Votes.Federation do
     diff = abs(DateTime.diff(time, DateTime.now!("Etc/UTC")))
 
     not (diff > :timer.seconds(60))
-  end
-
-  def follow(community) do
-    url = URI.parse(community)
-
-    headers = [
-      date: to_string(:httpd_util.rfc1123_date()),
-      host: url.host
-    ]
-
-    comparison_string =
-      Enum.map(headers, fn {key, value} -> "#{key}: #{value}" end) |> Enum.join("\n")
-
-    signature =
-      %Signature{
-        key_id: url(~p"/"),
-        headers: Keyword.keys(headers) |> Enum.map(&to_string/1),
-        signature: Crypto.sign(Application.get_env(:votes, :private_key), comparison_string)
-      }
-      |> to_string
-
-    Req.new(method: :post, url: community, headers: headers)
   end
 
   # Like / Dislike

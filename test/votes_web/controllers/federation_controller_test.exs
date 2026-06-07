@@ -10,11 +10,11 @@ defmodule VotesWeb.FederationControllerTest do
 
   defp headers({public_key, private_key}, date) do
     # {:ok, signature} = Federation.validate_signature(signature_header)
-    signature_header = create_signature_header()
+    signature_header = create_signature_header(private_key, date)
     %{"host" => "gregtech.eu", "date" => date, "signature" => signature_header}
   end
 
-  def create_signature_header() do
+  defp create_signature_header(private_key, date) do
     to_be_signed_string =
       "(request-target): post /inbox\nhost: gregtech.eu\ndate: #{date}"
 
