@@ -38,4 +38,6 @@ npm-debug.log
 # Nix stuff
 .nix-mix/
 .nix-hex
+.expert
+.elixir_ls
 postgres/
