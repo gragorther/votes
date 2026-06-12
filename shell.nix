@@ -1,8 +1,8 @@
 with import <nixpkgs> {}; # This should probably be pinned to something. For me it points to 24.05 channel
 let
   basePackages = [
-    beam28Packages.elixir_1_19
-    beam28Packages.erlang
+    beam29Packages.elixir_1_20
+    beam29Packages.erlang
     elixir-ls
     inotify-tools
     nodejs
