@@ -3,6 +3,79 @@ defmodule VotesWeb.FederationController do
   require Logger
   alias Votes.Federation
   alias Votes.Crypto
+  alias Votes.Posts
+
+  # returns an HTTP status
+  defp handle_object(
+         %{
+           "id" => like_activitypub_id,
+           "actor" => liked_by,
+           "type" => type,
+           "object" => liked_post,
+           "audience" => audience
+         } = object,
+         announcer
+       )
+       when type in ["Like", "Dislike"] do
+    upvote? = type == "Like"
+
+    if audience != announcer do
+      400
+    else
+      case Posts.create_vote(upvote?, liked_by, liked_post, like_activitypub_id) do
+        :ok -> 200
+        {:error, :already_exists} -> 409
+      end
+    end
+  end
+
+  defp handle_event(
+         conn,
+         %{
+           "type" => "Announce",
+           "actor" => announced_by,
+           "object" =>
+             %{
+               "id" => object_id
+             } = object
+         },
+         actor
+       ) do
+    case Req.get(object_id) do
+      {:error, err} ->
+        Logger.error(err)
+        put_status(conn, 500)
+
+      {:ok, %{body: %{"id" => id} = ap_received_object}}
+      when ap_received_object != object or object_id != id ->
+        put_status(conn, 403)
+
+      {:ok, %{body: ap_received_object}} ->
+        put_status(conn, handle_object(ap_received_object, announced_by))
+    end
+
+    # only one record should be put in the db
+  end
+
+  defp verify_crypto(http_headers, signature, public_key) do
+    comparison_string =
+      Enum.map(signature.headers, fn signed_header_name ->
+        if String.starts_with?(signed_header_name, "(request-target)") do
+          "(request-target): post /inbox"
+        else
+          "#{String.downcase(signed_header_name)}: #{http_headers[signed_header_name]}"
+        end
+      end)
+      |> Enum.join("\n")
+
+    signature_base64 = signature.signature
+
+    signature_decoded = Base.decode64!(signature_base64)
+
+    public_key = Crypto.decode_pem_key(public_key)
+
+    Crypto.verify(comparison_string, signature_decoded, public_key)
+  end
 
   def inbox(conn, data) do
     http_headers = Map.new(conn.req_headers)
@@ -14,50 +87,42 @@ defmodule VotesWeb.FederationController do
         put_status(conn, 400)
       else
         key_owner = signature_response["publicKey"]["owner"]
-        actor_resp = Req.get(key_owner)
 
-        case actor_resp do
-          {:error, err} ->
-            Logger.error(err)
-            put_status(conn, 500)
+        verify_crypto_fun = fn ->
+          if verify_crypto(http_headers, signature, public_key) do
+            handle_event(conn, data, key_owner)
+          else
+            put_status(conn, 401)
+          end
+        end
 
-          {:ok, %{status: status}} when status < 300 ->
-            put_status(conn, status)
+        # if the key owner (which is acquired from the signature response)
+        # isn't the same as the key id, i.e. they're split across different sites
+        if key_owner != signature.key_id do
+          actor_resp = Req.get(key_owner)
 
-          {:ok,
-           %{body: %{"publicKey" => %{"publicKeyPem" => actor_public_key}, "id" => actor_ap_id}}}
-          when actor_public_key != public_key or actor_ap_id != key_owner ->
-            put_status(conn, 403)
+          case actor_resp do
+            {:error, err} ->
+              Logger.error(err)
+              put_status(conn, 500)
 
-          # TODO: use actor_ap_id for security (to prevent random people from sending activities on behalf of others)
-          {:ok, %{body: %{"id" => actor_ap_id}}} ->
-            comparison_string =
-              Enum.map(signature.headers, fn signed_header_name ->
-                if String.starts_with?(signed_header_name, "(request-target)") do
-                  "(request-target): post /inbox"
-                else
-                  "#{String.downcase(signed_header_name)}: #{http_headers[signed_header_name]}"
-                end
-              end)
-              |> Enum.join("\n")
+            {:ok, %{status: status}} when status < 300 ->
+              put_status(conn, status)
 
-            signature_base64 = signature.signature
+            {:ok,
+             %{body: %{"publicKey" => %{"publicKeyPem" => actor_public_key}, "id" => actor_ap_id}}}
+            when actor_public_key != public_key or actor_ap_id != key_owner ->
+              put_status(conn, 403)
 
-            signature_decoded = Base.decode64!(signature_base64)
-
-            public_key = Crypto.decode_pem_key(public_key)
-
-            if Crypto.verify(comparison_string, signature_decoded, public_key) do
-              case Federation.handle_event(data) do
-                :ok -> put_status(conn, 200)
-                :error -> put_status(conn, 500)
-              end
-            else
-              put_status(conn, 401)
-            end
+            {:ok, %{body: %{"id" => actor_ap_id}}} ->
+              verify_crypto_fun.()
+          end
+        else
+          verify_crypto_fun.()
         end
       end
     else
+      # if something goes wrong parsing the signature or getting the public key
       _ -> put_status(conn, 422)
     end
   end

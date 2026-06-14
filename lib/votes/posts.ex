@@ -11,6 +11,26 @@ defmodule Votes.Posts do
   # def change_post(attrs) do
   #   Post.changeset(%Post{}, attrs)
   # end
+  def create_vote(upvote?, actor_ap_id, post_ap_id, vote_ap_id) do
+    case Repo.insert_all(
+           Vote,
+           from(p in Post,
+             where: p.ap_id == ^post_ap_id,
+             join: a in Actor,
+             on: a.ap_id == ^actor_ap_id,
+             select: %{
+               upvote: ^upvote?,
+               post_id: p.id,
+               ap_id: ^vote_ap_id,
+               actor_id: a.id
+             }
+           )
+         ) do
+      {1, _} -> :ok
+      {0, _} -> {:error, :already_exists}
+      {x, _} when is_integer(x) -> {:error, :too_many_inserts}
+    end
+  end
 
   @doc """
   Returns the list of posts.

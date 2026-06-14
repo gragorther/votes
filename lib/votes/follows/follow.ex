@@ -10,9 +10,12 @@ defmodule Votes.Follows.Follow do
   end
 
   @doc false
+
+  # use this when we have internal data
   def changeset(follow, attrs) do
     follow
-    |> cast(attrs, [:object, :accepted])
-    |> validate_required([:object, :accepted])
+    |> cast(attrs, [:actor_id, :accepted])
+    |> validate_required([:actor_id])
+    |> unique_constraint(:actor_id)
   end
 end

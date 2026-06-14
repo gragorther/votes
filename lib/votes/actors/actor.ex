@@ -21,5 +21,7 @@ defmodule Votes.Actors.Actor do
     actor
     |> cast(attrs, [:ap_id, :public_key, :username])
     |> validate_required([:ap_id, :public_key])
+    |> unique_constraint(:ap_id)
+    |> unique_constraint(:public_key)
   end
 end
