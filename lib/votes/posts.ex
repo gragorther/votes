@@ -7,29 +7,34 @@ defmodule Votes.Posts do
   alias Votes.Repo
   alias Votes.Posts.Vote
   alias Votes.Posts.Post
+  alias Votes.Actors.Actor
+
+  defp insert_all(schema_or_source, entries) do
+    case Repo.insert_all(schema_or_source, entries) do
+      {1, _} -> :ok
+      {0, _} -> {:error, :already_exists}
+      {x, _} when is_integer(x) -> {:error, :too_many_inserts}
+    end
+  end
 
   # def change_post(attrs) do
   #   Post.changeset(%Post{}, attrs)
   # end
   def create_vote(upvote?, actor_ap_id, post_ap_id, vote_ap_id) do
-    case Repo.insert_all(
-           Vote,
-           from(p in Post,
-             where: p.ap_id == ^post_ap_id,
-             join: a in Actor,
-             on: a.ap_id == ^actor_ap_id,
-             select: %{
-               upvote: ^upvote?,
-               post_id: p.id,
-               ap_id: ^vote_ap_id,
-               actor_id: a.id
-             }
-           )
-         ) do
-      {1, _} -> :ok
-      {0, _} -> {:error, :already_exists}
-      {x, _} when is_integer(x) -> {:error, :too_many_inserts}
-    end
+    insert_all(
+      Vote,
+      from(p in Post,
+        where: p.ap_id == ^post_ap_id,
+        join: a in Actor,
+        on: a.ap_id == ^actor_ap_id,
+        select: %{
+          upvote: ^upvote?,
+          post_id: p.id,
+          ap_id: ^vote_ap_id,
+          actor_id: a.id
+        }
+      )
+    )
   end
 
   @doc """
@@ -60,6 +65,30 @@ defmodule Votes.Posts do
 
   """
   def get_post!(id), do: Repo.get!(Post, id)
+
+  def create_post(%{
+        "type" => type,
+        "id" => ap_id,
+        "attributedTo" => author_ap_id,
+        "name" => title,
+        "audience" => audience,
+        "published" => published
+      })
+      when type in ["Note", "Page"] do
+    insert_all(
+      Post,
+      from(a in Actor,
+        where: a.ap_id == ^author_ap_id,
+        select: %{
+          ap_id: ^ap_id,
+          actor_id: a.id,
+          audience: ^audience,
+          title: ^title,
+          published: ^published
+        }
+      )
+    )
+  end
 
   @doc """
   Creates a post.

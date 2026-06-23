@@ -13,7 +13,7 @@ defmodule VotesWeb.FederationController do
            "type" => type,
            "object" => liked_post,
            "audience" => audience
-         } = object,
+         },
          announcer
        )
        when type in ["Like", "Dislike"] do
@@ -29,6 +29,20 @@ defmodule VotesWeb.FederationController do
     end
   end
 
+  defp handle_object(
+         %{
+           "type" => type
+         } = post,
+         _announcer
+       )
+       when type in ["Note", "Page"] do
+    case Posts.create_post(post) do
+      :ok -> 201
+      # Conflict
+      {:error, :already_exists} -> 409
+    end
+  end
+
   defp handle_event(
          conn,
          %{
@@ -41,20 +55,22 @@ defmodule VotesWeb.FederationController do
          },
          actor
        ) do
-    case Req.get(object_id) do
-      {:error, err} ->
-        Logger.error(err)
-        put_status(conn, 500)
+    if actor != announced_by do
+      put_status(conn, 403)
+    else
+      case Req.get(object_id) do
+        {:error, err} ->
+          Logger.error(err)
+          put_status(conn, 500)
 
-      {:ok, %{body: %{"id" => id} = ap_received_object}}
-      when ap_received_object != object or object_id != id ->
-        put_status(conn, 403)
+        {:ok, %{body: %{"id" => id} = ap_received_object}}
+        when ap_received_object != object or object_id != id ->
+          put_status(conn, 403)
 
-      {:ok, %{body: ap_received_object}} ->
-        put_status(conn, handle_object(ap_received_object, announced_by))
+        {:ok, %{body: ap_received_object}} ->
+          put_status(conn, handle_object(ap_received_object, announced_by))
+      end
     end
-
-    # only one record should be put in the db
   end
 
   defp verify_crypto(http_headers, signature, public_key) do
