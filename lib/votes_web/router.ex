@@ -12,13 +12,13 @@ defmodule VotesWeb.Router do
   end
 
   pipeline :api do
-    plug(:accepts, ["json"])
+    plug(:accepts, ["json", "ld+json"])
   end
 
   scope "/" do
     pipe_through(:api)
     post("/inbox", FederationController, :inbox)
-    get("/", FederationController, :account_page)
+    get("/", FederationController, :instance_actor_page)
   end
 
   scope "/", VotesWeb do

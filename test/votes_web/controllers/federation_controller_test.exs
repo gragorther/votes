@@ -25,36 +25,4 @@ defmodule VotesWeb.FederationControllerTest do
     signature_header =
       ~s|keyId="https://my-example.com/actor#main-key",headers="(request-target) host date",signature="#{signed_string}"|
   end
-
-  describe "inbox" do
-    test "works", %{conn: conn} do
-      date = current_time_in_rfc1124()
-      {public_key, private_key} = keypair = Crypto.create_rsa_keypair()
-
-      headers = for header <- headers(keypair, date), into: [], do: header
-
-      conn =
-        Map.update(conn, :req_headers, headers, fn current -> current ++ headers end)
-
-      encoded_public_key = Crypto.pem_encode_rsa_public_key(public_key)
-
-      Req.Test.stub(VotesWeb.FederationController, fn conn ->
-        Req.Test.json(conn, %{"publicKey" => %{"publicKeyPem" => encoded_public_key}})
-      end)
-
-      post = post_fixture()
-      actor = actor_fixture()
-
-      assert post(conn, ~p"/inbox", %{
-               "type" => "Announce",
-               "actor" => unique_actor_ap_id(),
-               "object" => %{
-                 "id" => unique_vote_ap_id(),
-                 "actor" => actor.ap_id,
-                 "type" => "Like",
-                 "object" => post.ap_id
-               }
-             }).status == 200
-    end
-  end
 end

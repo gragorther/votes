@@ -11,22 +11,23 @@ defmodule VotesWeb.FederationController do
            "id" => like_activitypub_id,
            "actor" => liked_by,
            "type" => type,
-           "object" => liked_post,
-           "audience" => audience
+           "object" => liked_post
+           #      "audience" => _audience
          },
-         announcer
+         _announcer
        )
        when type in ["Like", "Dislike"] do
     upvote? = type == "Like"
 
-    if audience != announcer do
-      400
-    else
-      case Posts.create_vote(upvote?, liked_by, liked_post, like_activitypub_id) do
-        :ok -> 200
-        {:error, :already_exists} -> 409
-      end
+    #   if audience != announcer do
+    #     400
+    #   else
+    case Posts.create_vote(upvote?, liked_by, liked_post, like_activitypub_id) do
+      :ok -> 200
+      {:error, :already_exists} -> 409
     end
+
+    #  end
   end
 
   defp handle_object(
@@ -43,33 +44,41 @@ defmodule VotesWeb.FederationController do
     end
   end
 
+  defp handle_object(%{"type" => "Announce", "id" => id, "object" => object, "actor" => actor}, _) do
+    if verify_remote_object(object) do
+      handle_object(object, actor)
+    else
+      403
+    end
+  end
+
+  # verifies stuff and hands the object off to handle_object
   defp handle_event(
          conn,
          %{
-           "type" => "Announce",
-           "actor" => announced_by,
-           "object" =>
-             %{
-               "id" => object_id
-             } = object
-         },
+           #        "type" => "Announce",
+           "actor" => actor_in_object
+         } = object,
          actor
        ) do
-    if actor != announced_by do
+    if actor != actor_in_object do
       put_status(conn, 403)
     else
-      case Req.get(object_id) do
-        {:error, err} ->
-          Logger.error(err)
-          put_status(conn, 500)
-
-        {:ok, %{body: %{"id" => id} = ap_received_object}}
-        when ap_received_object != object or object_id != id ->
-          put_status(conn, 403)
-
-        {:ok, %{body: ap_received_object}} ->
-          put_status(conn, handle_object(ap_received_object, announced_by))
+      if verify_remote_object(object) do
+        put_status(conn, handle_object(object, actor))
+      else
+        put_status(conn, 403)
       end
+    end
+  end
+
+  defp verify_remote_object(%{"id" => id} = object) do
+    case Req.get(id) do
+      {:error, err} ->
+        raise err
+
+      {:ok, %{body: ap_received_object}} ->
+        ap_received_object == object
     end
   end
 
@@ -122,7 +131,7 @@ defmodule VotesWeb.FederationController do
               Logger.error(err)
               put_status(conn, 500)
 
-            {:ok, %{status: status}} when status < 300 ->
+            {:ok, %{status: status}} when status >= 300 ->
               put_status(conn, status)
 
             {:ok,
@@ -143,7 +152,7 @@ defmodule VotesWeb.FederationController do
     end
   end
 
-  def account_page(conn, _) do
-    render(conn, :account_page)
+  def instance_actor_page(conn, _) do
+    render(conn, :instance_actor_page)
   end
 end

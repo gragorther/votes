@@ -38,7 +38,8 @@ defmodule Votes.PostsFixtures do
       |> Enum.into(%{
         title: "some title",
         ap_id: unique_post_ap_id(),
-        actor_id: actor.id
+        actor_id: actor.id,
+        published: DateTime.now!("Europe/Ljubljana")
       })
       |> Votes.Posts.create_post()
 
