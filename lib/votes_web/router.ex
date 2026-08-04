@@ -15,8 +15,12 @@ defmodule VotesWeb.Router do
     plug(:accepts, ["json", "ld+json"])
   end
 
+  pipeline :json_ld do
+    plug(:accepts, ["json-ld", "json-ld-mastodon"])
+  end
+
   scope "/" do
-    pipe_through(:api)
+    pipe_through(:json_ld)
     post("/inbox", FederationController, :inbox)
     get("/", FederationController, :instance_actor_page)
   end

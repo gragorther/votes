@@ -16,8 +16,15 @@ defmodule Votes.Federation do
     {:ok, time} = Timex.parse(date, "{RFC1123}")
 
     # absulute because the received date is usually before the current date (unless the actor is a time traveler)
-    diff = abs(DateTime.diff(time, DateTime.now!("Etc/UTC")))
+    diff = abs(DateTime.diff(time, DateTime.now!("Etc/UTC"), :millisecond))
 
-    not (diff > :timer.seconds(60))
+    diff < :timer.hours(1) + :timer.seconds(60)
+  end
+
+  def create_signature(opts \\ []) do
+  end
+
+  def fetch(url) do
+    request = Req.new(url: url)
   end
 end

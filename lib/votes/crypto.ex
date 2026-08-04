@@ -1,4 +1,8 @@
 defmodule Votes.Crypto do
+  def hash(data) do
+    "SHA-256=" <> (:crypto.hash(:sha256, data) |> Base.encode64())
+  end
+
   def create_rsa_private_key do
     :public_key.generate_key({:rsa, 4096, 65537})
   end

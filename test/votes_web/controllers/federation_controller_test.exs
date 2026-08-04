@@ -1,5 +1,6 @@
 defmodule VotesWeb.FederationControllerTest do
   use VotesWeb.ConnCase
+  use Votes.DataCase
   alias Votes.Crypto
   import Votes.PostsFixtures
   import Votes.ActorsFixtures
@@ -25,4 +26,10 @@ defmodule VotesWeb.FederationControllerTest do
     signature_header =
       ~s|keyId="https://my-example.com/actor#main-key",headers="(request-target) host date",signature="#{signed_string}"|
   end
+
+  # describe "inbox" do
+  #   test "accepts valid create activity" do
+
+  #   end
+  # end
 end
